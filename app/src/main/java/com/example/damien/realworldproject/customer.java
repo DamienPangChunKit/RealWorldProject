@@ -1,133 +1,104 @@
 package com.example.damien.realworldproject;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 public class customer extends AppCompatActivity {
+    TextView mTVMoney;
 
-    //Initialize drawer variables
-    DrawerLayout drawerLayout;
-    //
+    private int id;
+    private float totalAmt;
+    private String phone_no;
+    private String password;
+    private String username;
+
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer);
 
-        //drawer coding part
-        drawerLayout = findViewById(R.id.drawer_layout);
+        id = getIntent().getIntExtra(login.EXTRA_ID, -1);
+        totalAmt = getIntent().getFloatExtra(login.EXTRA_WALLET_BALANCE, -1);
+        phone_no = getIntent().getStringExtra(login.EXTRA_PHONE);
+        password = getIntent().getStringExtra(login.EXTRA_PASSWORD);
+        username = getIntent().getStringExtra(login.EXTRA_USERNAME);
 
-        //
+        mTVMoney = findViewById(R.id.tvMoney);
+        mTVMoney.setText("RM " + totalAmt + "0");
 
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mToggle = new ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.open,R.string.close);
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+
+        NavigationView nvDrawer = (NavigationView)findViewById(R.id.nv);
+
+        //call setupDrawerContent
+        setupDrawerContent(nvDrawer);
     }
 
-    //drawer coding part
-    public void ClickMenu(View view){
-        //open drawer
-        openDrawer(drawerLayout);
-
-    }
-
-    public static void openDrawer(DrawerLayout drawerLayout) {
-        //open drawer layout
-        drawerLayout.openDrawer(GravityCompat.START);
-
-    }
-
-    public void ClickLogo(View view){
-        //Close drawer
-        closeDrawer(drawerLayout);
-
-    }
-
-    public static void closeDrawer(DrawerLayout drawerLayout) {
-        //Close drawer layout
-        //check condition
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
-            //When drawer is open
-            //CLose drawer
-            drawerLayout.closeDrawer(GravityCompat.START);
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
-    public void ClickHome(View view){
-        //Recreate activity
-        recreate();
-
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
     }
 
-    public void ClickDashboard(View view){
-        //Redirect activity to dashboard
-        redirectActivity(this,Dashboard.class);
+    public void selectDrawerItem(MenuItem menuItem) {
+        Class aClass;
+        switch(menuItem.getItemId()) {
+            case R.id.profile:
+                aClass = profile.class;
+                break;
+            case R.id.history:
+                aClass = history.class;
+                break;
+            default:
+                aClass = profile.class;
+        }
 
+        // Close the navigation drawer
+        mDrawerLayout.closeDrawers();
+
+        Intent i = new Intent(this,aClass);
+        i.putExtra(login.EXTRA_ID, id);
+        i.putExtra(login.EXTRA_USERNAME, username);
+        i.putExtra(login.EXTRA_PASSWORD, password);
+        i.putExtra(login.EXTRA_PHONE, phone_no);
+        startActivity(i);
     }
-
-    public void ClickAboutUs(View view){
-        //Redirect activity to about us
-        redirectActivity(this,AboutUs.class);
-
-    }
-
-    public void ClickLogout(View view){
-        //Close app
-        logout(this);
-    }
-
-    public static void logout(final Activity activity) {
-        //Initialize alert dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        //set title
-        builder.setTitle("Logout");
-        //set message
-        builder.setMessage("Confirm logout ?");
-        //positive yes button
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //Finish activity
-                activity.finishAffinity();
-                //Exit app
-                System.exit(0);
-            }
-        });
-        //negative no button
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //Dismiss dialog
-                dialog.dismiss();
-            }
-        });
-        //show dialog
-        builder.show();
-    }
-
-    public static void redirectActivity(Activity activity, Class aClass) {
-        //Initialize intent
-        Intent i = new Intent(activity,aClass);
-        //Set flag
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //Start activity
-        activity.startActivity(i);
-
-    }
-
-    protected void onPause(){
-        super.onPause();
-        //Close drawer
-        closeDrawer(drawerLayout);
-
-    }
-
-    //
 
     @Override
     public void onBackPressed() {
@@ -135,6 +106,31 @@ public class customer extends AppCompatActivity {
         a.addCategory(Intent.CATEGORY_HOME);
         a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(a);
+    }
+
+    public void btnAppointment_onClicked(View view) {
+        Intent i = new Intent(customer.this, appointment.class);
+        i.putExtra(login.EXTRA_ID, id);
+        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
+        startActivity(i);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1){
+            if (resultCode == RESULT_OK){
+                totalAmt = data.getFloatExtra("TOTAL_AMOUNT", 0);
+                mTVMoney.setText("RM " + totalAmt + "0");
+            }
+        }
+    }
+
+    public void btnReload_onClicked(View view) {
+        Intent i = new Intent(customer.this, reload.class);
+        i.putExtra(login.EXTRA_ID, id);
+        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
+        startActivityForResult(i, 1);
     }
 
 }

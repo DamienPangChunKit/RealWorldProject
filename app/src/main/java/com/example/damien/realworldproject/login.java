@@ -23,9 +23,11 @@ public class login extends AppCompatActivity {
     private TextInputLayout textInputUsername;
     private TextInputLayout textInputPassword;
 
-    public static final String EXTRA_ID = "com.example.admin.gpslivetracking2.ID";
-    public static final String EXTRA_USERNAME = "com.example.admin.gpslivetracking2.USERNAME";
-    public static final String EXTRA_ROLE = "com.example.admin.gpslivetracking2.ROLE";
+    public static final String EXTRA_ID = "com.example.damien.realworldproject.ID";
+    public static final String EXTRA_USERNAME = "com.example.damien.realworldproject.USERNAME";
+    public static final String EXTRA_WALLET_BALANCE = "com.example.damien.realworldproject.WALLET";
+    public static final String EXTRA_PHONE = "com.example.damien.realworldproject.PHONE";
+    public static final String EXTRA_PASSWORD = "com.example.damien.realworldproject.PASSWORD";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class login extends AppCompatActivity {
             String passwordInput = textInputPassword.getEditText().getText().toString().trim();
             String usernameInput = textInputUsername.getEditText().getText().toString().trim();
 
-            Background bg = new Background(); // here me here noisy ps
+            Background bg = new Background();
             String hashed_password = MD5(passwordInput);
             bg.execute(usernameInput, hashed_password);
         }
@@ -99,19 +101,13 @@ public class login extends AppCompatActivity {
 
     public class Background extends AsyncTask<String, Void, ResultSet> {
         private static final String LIBRARY = "com.mysql.jdbc.Driver";
-        private static final String USERNAME = "realworldproject";
-        private static final String DB_NAME = "gps_sys";
-        private static final String PASSWORD = "vz7c4RlOC4";
-        private static final String SERVER = "db4free.net";
-
-        public static final int SELECT = -1;
-        public static final int INSERT = -2;
-        public static final int UPDATE = -3;
-        public static final int DELETE = -4;
+        private static final String USERNAME = "sql12372307";
+        private static final String DB_NAME = "sql12372307";
+        private static final String PASSWORD = "LYyljvuyn8";
+        private static final String SERVER = "sql12.freemysqlhosting.net";
 
         private Connection conn;
         private PreparedStatement stmt;
-        private int method;
         private ProgressDialog progressDialog;
 
         public Background() {
@@ -127,6 +123,9 @@ public class login extends AppCompatActivity {
                 if (result.next()) {
                     i.putExtra(EXTRA_ID, result.getInt(1));
                     i.putExtra(EXTRA_USERNAME, result.getString(2));
+                    i.putExtra(EXTRA_WALLET_BALANCE, result.getFloat(3));
+                    i.putExtra(EXTRA_PHONE, result.getString(4));
+                    i.putExtra(EXTRA_PASSWORD, result.getString(5));
                     startActivity(i);
                 }
                 else {
@@ -162,9 +161,9 @@ public class login extends AppCompatActivity {
                 return null;
             }
             try {
-                String query = "SELECT id, username FROM account WHERE username LIKE ? AND password=? AND role='customer'";
+                String query = "SELECT id, username, wallet_balance, phone_no, password FROM account WHERE username LIKE ? AND password=? AND role='customer'";
                 stmt = conn.prepareStatement(query);
-                stmt.setString(1, strings[0]); // remove role ?
+                stmt.setString(1, strings[0]);
                 stmt.setString(2, strings[1]);
                 result = stmt.executeQuery();
             }

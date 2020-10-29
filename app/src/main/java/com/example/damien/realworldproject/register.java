@@ -96,7 +96,8 @@ public class register extends AppCompatActivity {
             return false;
         } else if (phoneInput.charAt(0) != '0' |
                 phoneInput.charAt(1) != '1' |
-                phoneInput.length() < 10) {
+                phoneInput.length() < 10 |
+                phoneInput.length() > 11) {
             textInputPhone.setError("Please input phone number format as 0123456789");
             return false;
         } else {
@@ -139,10 +140,10 @@ public class register extends AppCompatActivity {
 
     public class Background extends AsyncTask<String, Void, ResultSet> {
         private static final String LIBRARY = "com.mysql.jdbc.Driver";
-        private static final String USERNAME = "realworldproject";
-        private static final String DB_NAME = "gps_sys";
-        private static final String PASSWORD = "vz7c4RlOC4";
-        private static final String SERVER = "db4free.net";
+        private static final String USERNAME = "sql12372307";
+        private static final String DB_NAME = "sql12372307";
+        private static final String PASSWORD = "LYyljvuyn8";
+        private static final String SERVER = "sql12.freemysqlhosting.net";
 
         private Connection conn;
         private PreparedStatement stmt;
@@ -189,12 +190,13 @@ public class register extends AppCompatActivity {
                 return null;
             }
             try {
-                String query = "insert into account (username, password, phone_no, role ) values (?, ?, ?, ?)";
+                String query = "insert into account (username, password, phone_no, role, wallet_balance) values (?, ?, ?, ?, ?)";
                 stmt = conn.prepareStatement(query);
                 stmt.setString(1, strings[0]);
                 stmt.setString(2, strings[1]);
                 stmt.setString(3, strings[2]);
                 stmt.setString(4, "customer");
+                stmt.setFloat(5, 0.0f);
                 stmt.executeUpdate();
             }
             catch (Exception e) {
