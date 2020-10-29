@@ -85,6 +85,12 @@ public class customer extends AppCompatActivity {
             case R.id.history:
                 aClass = history.class;
                 break;
+            case R.id.password:
+                aClass = changePassword.class;
+                break;
+            case R.id.logout:
+                aClass = login.class;
+                break;
             default:
                 aClass = profile.class;
         }

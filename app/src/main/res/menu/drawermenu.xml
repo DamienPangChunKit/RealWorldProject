@@ -4,6 +4,7 @@
     tools:showIn="nv">
     <group>
         <item android:id="@+id/profile" android:title="Profile" android:icon="@drawable/ic_profile"/>
+        <item android:id="@+id/password" android:title="Change password" android:icon="@drawable/ic_password"/>
         <item android:id="@+id/history" android:title="History" android:icon="@drawable/ic_history"/>
         <item android:id="@+id/logout" android:title="Logout" android:icon="@drawable/ic_logout"/>
     </group>

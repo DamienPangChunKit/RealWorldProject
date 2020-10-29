@@ -28,7 +28,8 @@
         <activity android:name=".profile" />
         <activity android:name=".history" />
         <activity android:name=".map" />
-        <activity android:name=".editProfile"></activity>
+        <activity android:name=".editProfile" />
+        <activity android:name=".changePassword"></activity>
     </application>
 
 </manifest>

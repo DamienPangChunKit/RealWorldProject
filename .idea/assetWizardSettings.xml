@@ -84,7 +84,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Users/User/Desktop/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_exit_to_app_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Users/User/Desktop/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_lock_outline_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -95,7 +95,7 @@
                         <option name="values">
                           <map>
                             <entry key="height" value="32" />
-                            <entry key="outputName" value="ic_logout" />
+                            <entry key="outputName" value="ic_password" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\User" />
                             <entry key="width" value="32" />

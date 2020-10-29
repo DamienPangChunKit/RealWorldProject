@@ -38,6 +38,14 @@ public class login extends AppCompatActivity {
         textInputPassword = findViewById(R.id.textInputPassword);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
+
     private boolean validateUsername(){
         String usernameInput = textInputUsername.getEditText().getText().toString().trim();
 
@@ -119,13 +127,15 @@ public class login extends AppCompatActivity {
         protected void onPostExecute(ResultSet result) {
             super.onPostExecute(result);
             Intent i = new Intent(login.this, customer.class);
+            String passwordInput = textInputPassword.getEditText().getText().toString().trim();
+
             try {
                 if (result.next()) {
                     i.putExtra(EXTRA_ID, result.getInt(1));
                     i.putExtra(EXTRA_USERNAME, result.getString(2));
                     i.putExtra(EXTRA_WALLET_BALANCE, result.getFloat(3));
                     i.putExtra(EXTRA_PHONE, result.getString(4));
-                    i.putExtra(EXTRA_PASSWORD, result.getString(5));
+                    i.putExtra(EXTRA_PASSWORD, passwordInput);
                     startActivity(i);
                 }
                 else {
