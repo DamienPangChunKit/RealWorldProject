@@ -21,6 +21,8 @@ public class customer extends AppCompatActivity {
     private String phone_no;
     private String password;
     private String username;
+    private double latitude;
+    private double longtitude;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
@@ -38,6 +40,12 @@ public class customer extends AppCompatActivity {
         phone_no = getIntent().getStringExtra(login.EXTRA_PHONE);
         password = getIntent().getStringExtra(login.EXTRA_PASSWORD);
         username = getIntent().getStringExtra(login.EXTRA_USERNAME);
+
+        //pass to track staff location activity
+        latitude = getIntent().getDoubleExtra(appointment.EXTRA_LATITUDE);
+        longtitude = getIntent().getDoubleExtra(appointment.EXTRA_LONGTITUDE);
+
+
 
         mTVMoney = findViewById(R.id.tvMoney);
         mTVMoney.setText("RM " + totalAmt + "0");
@@ -153,4 +161,11 @@ public class customer extends AppCompatActivity {
         startActivityForResult(i, 1);
     }
 
+    //added to intent to track staff location activity
+    public void btnStaffLocation_onClicked(View view) {
+        Intent i = new Intent(customer.this, reload.class);
+        i.putExtra(login.EXTRA_ID, id);
+        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
+        startActivity(i);
+    }
 }

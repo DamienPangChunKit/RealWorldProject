@@ -29,7 +29,8 @@
         <activity android:name=".history" />
         <activity android:name=".map" />
         <activity android:name=".editProfile" />
-        <activity android:name=".changePassword"></activity>
+        <activity android:name=".changePassword" />
+        <activity android:name=".staffLocation"></activity>
     </application>
 
 </manifest>

@@ -41,6 +41,9 @@ public class appointment extends AppCompatActivity {
     private String serviceOrder;
     private String dateTimeOrder;
 
+    public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
+    public static final String EXTRA_LONGTITUDE = "com.example.damien.realworldproject.LONGTITUDE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -294,6 +297,17 @@ public class appointment extends AppCompatActivity {
                 progressDialog.hide();
                 try { result.close(); } catch (Exception e) { /* ignored */ }
                 closeConn();
+            }
+
+            //testing
+            try{
+                i.putExtra(EXTRA_LATITUDE, latitude);
+                i.putExtra(EXTRA_LONGTITUDE, longtitude);
+                startActivity(i);
+            }
+            catch(Exception e){
+                Log.e("ERROR DETECTED", e.getMessage());
+                Toast.makeText(appointment.this, "Failed to intent back mpa data", Toast.LENGTH_SHORT).show();
             }
 
         }
