@@ -29,6 +29,7 @@ public class customer extends AppCompatActivity {
     private Toolbar toolbar;
 
     public static int REQUEST_CODE = 49;
+    public static int REQUEST_CODE1 = 39;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +43,8 @@ public class customer extends AppCompatActivity {
         username = getIntent().getStringExtra(login.EXTRA_USERNAME);
 
         //pass to track staff location activity
-        latitude = getIntent().getDoubleExtra(appointment.EXTRA_LATITUDE);
-        longtitude = getIntent().getDoubleExtra(appointment.EXTRA_LONGTITUDE);
-
+        latitude = getIntent().getDoubleExtra(appointment.EXTRA_LATITUDE,REQUEST_CODE1);
+        longtitude = getIntent().getDoubleExtra(appointment.EXTRA_LONGTITUDE,REQUEST_CODE1);
 
 
         mTVMoney = findViewById(R.id.tvMoney);
@@ -163,9 +163,9 @@ public class customer extends AppCompatActivity {
 
     //added to intent to track staff location activity
     public void btnStaffLocation_onClicked(View view) {
-        Intent i = new Intent(customer.this, reload.class);
-        i.putExtra(login.EXTRA_ID, id);
-        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
+        Intent i = new Intent(customer.this, staffLocation.class);
+        i.putExtra(appointment.EXTRA_LATITUDE, latitude);
+        i.putExtra(appointment.EXTRA_LONGTITUDE, longtitude);
         startActivity(i);
     }
 }
