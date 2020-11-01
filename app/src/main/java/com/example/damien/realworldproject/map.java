@@ -67,14 +67,16 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //must put getInstance access token before setContentView one
+        Mapbox.getInstance(this, getString(R.string.access_token));
         setContentView(R.layout.activity_map);
 
         // Mapbox access token is configured here. This needs to be called either in your application
 // object or in the same activity which contains the mapview.
-        Mapbox.getInstance(this, getString(R.string.access_token));
+
 
 // This contains the MapView in XML and needs to be called after the access token is configured.
-        setContentView(R.layout.activity_appointment);
+//        setContentView(R.layout.activity_appointment);
 
 // Initialize the mapboxMap view
         mapView = findViewById(R.id.mapView);

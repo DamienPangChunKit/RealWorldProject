@@ -26,6 +26,8 @@ public class customer extends AppCompatActivity {
     private ActionBarDrawerToggle mToggle;
     private Toolbar toolbar;
 
+    public static int REQUEST_CODE = 49;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +105,13 @@ public class customer extends AppCompatActivity {
         i.putExtra(login.EXTRA_USERNAME, username);
         i.putExtra(login.EXTRA_PASSWORD, password);
         i.putExtra(login.EXTRA_PHONE, phone_no);
-        startActivity(i);
+        if(aClass == profile.class){
+            startActivityForResult(i,REQUEST_CODE);
+        }
+        else{
+            startActivity(i);
+        }
+
     }
 
     @Override
@@ -128,6 +136,12 @@ public class customer extends AppCompatActivity {
             if (resultCode == RESULT_OK){
                 totalAmt = data.getFloatExtra("TOTAL_AMOUNT", 0);
                 mTVMoney.setText("RM " + totalAmt + "0");
+            }
+        }
+        else if(requestCode == REQUEST_CODE){
+            if (resultCode == RESULT_OK){
+                username = data.getStringExtra("USERNAME_EDIT");
+                phone_no = data.getStringExtra("PHONE_EDIT");
             }
         }
     }

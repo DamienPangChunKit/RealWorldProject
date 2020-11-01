@@ -173,6 +173,7 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
                 stmt = conn.prepareStatement(query);
                 stmt.setString(1, strings[0]);
                 stmt.setInt(2, id);
+                stmt.executeUpdate();
             }
             catch (Exception e) {
                 Log.e("ERROR MySQL Statement", e.getMessage());
