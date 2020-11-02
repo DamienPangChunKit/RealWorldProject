@@ -18,6 +18,7 @@ public class profile extends AppCompatActivity {
 
     public static final String USERNAME = "com.example.damien.realworldproject.USERNAME";
     public static final String PHONE = "com.example.damien.realworldproject.PHONE";
+    public static final int REQUEST_CODE = 50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class profile extends AppCompatActivity {
         id = getIntent().getIntExtra(login.EXTRA_ID, -1);
         username = getIntent().getStringExtra(login.EXTRA_USERNAME);
         phoneNo = getIntent().getStringExtra(login.EXTRA_PHONE);
-        
+
         mTVusername.setText(username);
         mTVphone.setText(phoneNo);
     }
@@ -38,13 +39,10 @@ public class profile extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
+        if (requestCode == REQUEST_CODE){
             if (resultCode == RESULT_OK){
-                username = data.getStringExtra("USERNAME_EDIT");
-                mTVusername.setText(username);
-
-                phoneNo = data.getStringExtra("PHONE_EDIT");
-                mTVphone.setText(phoneNo);
+                setResult(RESULT_OK, data);
+                finish();
             }
         }
     }
@@ -54,6 +52,6 @@ public class profile extends AppCompatActivity {
         i.putExtra(login.EXTRA_ID, id);
         i.putExtra(profile.USERNAME, username);
         i.putExtra(profile.PHONE, phoneNo);
-        startActivityForResult(i, 1);
+        startActivityForResult(i, REQUEST_CODE);
     }
 }

@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:paddingTop="68dp"
+            android:paddingTop="50dp"
             android:src="@drawable/login" />
 
         <TextView
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="46dp"
+            android:layout_marginTop="60dp"
             android:text="My Balance"
             android:textColor="@android:color/white"
             android:textSize="15dp"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="66dp"
+            android:layout_marginTop="80dp"
             android:text="RM 0.00"
             android:textColor="@android:color/white"
             android:textSize="30dp"
@@ -72,13 +72,11 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="142dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginTop="160dp"
             android:background="@drawable/roundedbutton"
             android:text="1"
             android:onClick="btnAppointment_onClicked"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.026"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -86,37 +84,23 @@
             android:id="@+id/btnReload"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="142dp"
+            android:layout_marginTop="160dp"
             android:background="@drawable/roundedbutton"
             android:text="2"
             android:onClick="btnReload_onClicked"
             app:layout_constraintStart_toEndOf="@+id/btnAppointment"
+            app:layout_constraintEnd_toStartOf="@id/btnMyActivity"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btnMyActivity"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginTop="142dp"
+            android:layout_marginEnd="42dp"
+            android:layout_marginTop="160dp"
             android:background="@drawable/roundedbutton"
             android:text="3"
-            app:layout_constraintEnd_toStartOf="@+id/btnOurService"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/btnOurService"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="142dp"
-            android:background="@drawable/roundedbutton"
-            android:text="4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.973"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

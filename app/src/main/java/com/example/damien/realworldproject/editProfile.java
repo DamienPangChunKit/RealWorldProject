@@ -100,6 +100,8 @@ public class editProfile extends AppCompatActivity {
         private Connection conn;
         private PreparedStatement stmt;
         private ProgressDialog progressDialog;
+        private String usernameEdit;
+        private String phoneEdit;
 
         public Background() {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -112,14 +114,11 @@ public class editProfile extends AppCompatActivity {
             progressDialog.hide();
             closeConn();
 
-            String usernameInput = mLayoutUsername.getEditText().getText().toString().trim();
-            String phoneInput = mLayoutPhone.getEditText().getText().toString().trim();
-
             try {
                 if (result.isEmpty()) {
                     Intent i = new Intent();
-                    i.putExtra("USERNAME_EDIT", usernameInput);
-                    i.putExtra("PHONE_EDIT", phoneInput);
+                    i.putExtra("USERNAME_EDIT", usernameEdit);
+                    i.putExtra("PHONE_EDIT", phoneEdit);
                     setResult(RESULT_OK, i);
                     finish();
                 }
@@ -146,8 +145,8 @@ public class editProfile extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             conn = connectDB();
-            String usernameEdit = strings[0];
-            String phoneEdit = strings[1];
+            usernameEdit = strings[0];
+            phoneEdit = strings[1];
 
             if (conn == null) {
                 return null;

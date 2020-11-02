@@ -26,6 +26,9 @@ public class customer extends AppCompatActivity {
     private ActionBarDrawerToggle mToggle;
     private Toolbar toolbar;
 
+    public static int REQUEST_CODE = 49;
+    public static int REQUEST_CODE2 = 40;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +106,13 @@ public class customer extends AppCompatActivity {
         i.putExtra(login.EXTRA_USERNAME, username);
         i.putExtra(login.EXTRA_PASSWORD, password);
         i.putExtra(login.EXTRA_PHONE, phone_no);
-        startActivity(i);
+        if(aClass == profile.class){
+            startActivityForResult(i,REQUEST_CODE);
+        }
+        else{
+            startActivity(i);
+        }
+
     }
 
     @Override
@@ -112,13 +121,6 @@ public class customer extends AppCompatActivity {
         a.addCategory(Intent.CATEGORY_HOME);
         a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(a);
-    }
-
-    public void btnAppointment_onClicked(View view) {
-        Intent i = new Intent(customer.this, appointment.class);
-        i.putExtra(login.EXTRA_ID, id);
-        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
-        startActivity(i);
     }
 
     @Override
@@ -130,13 +132,33 @@ public class customer extends AppCompatActivity {
                 mTVMoney.setText("RM " + totalAmt + "0");
             }
         }
+        else if(requestCode == REQUEST_CODE){
+            if (resultCode == RESULT_OK){
+                username = data.getStringExtra("USERNAME_EDIT");
+                phone_no = data.getStringExtra("PHONE_EDIT");
+            }
+        }
+        else if(requestCode == REQUEST_CODE2){
+            if(resultCode == RESULT_OK){
+                totalAmt = data.getFloatExtra("TOTAL_AMOUNT_AFTER_PAID", 0);
+                mTVMoney.setText("RM " + totalAmt + "0");
+            }
+        }
     }
 
     public void btnReload_onClicked(View view) {
         Intent i = new Intent(customer.this, reload.class);
         i.putExtra(login.EXTRA_ID, id);
         i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
+        i.putExtra(login.EXTRA_PASSWORD, password);
         startActivityForResult(i, 1);
+    }
+
+    public void btnAppointment_onClicked(View view) {
+        Intent i = new Intent(customer.this, appointment.class);
+        i.putExtra(login.EXTRA_ID, id);
+        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
+        startActivityForResult(i, REQUEST_CODE2);
     }
 
 }
