@@ -167,7 +167,6 @@ public class appointment extends AppCompatActivity {
 
                 TVLatLng.setText("Latitude  : " + latitude + "\n"
                         + "Longtitude: " + longtitude);
-
             }
         }
     }
