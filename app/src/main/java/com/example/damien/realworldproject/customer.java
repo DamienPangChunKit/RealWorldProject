@@ -163,6 +163,11 @@ public class customer extends AppCompatActivity {
 
     //added to intent to track staff location activity
     public void btnStaffLocation_onClicked(View view) {
+        //testing only
+        latitude = 5.412337;
+        longtitude = 100.317806;
+        //
+
         Intent i = new Intent(customer.this, staffLocation.class);
         i.putExtra(appointment.EXTRA_LATITUDE, latitude);
         i.putExtra(appointment.EXTRA_LONGTITUDE, longtitude);
