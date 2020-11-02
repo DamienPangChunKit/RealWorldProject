@@ -1,9 +1,13 @@
 package com.example.damien.realworldproject;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,7 +65,7 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
 
         Bundle i = getIntent().getExtras();
 
-        id = i.getInt(String.valueOf(1));
+        id = i.getInt(appointment.EXTRA_SERVICE_ID);
         //pass to track staff location activity
         //testing the variables
         destLatitude = i.getDouble(appointment.EXTRA_LATITUDE);
@@ -72,6 +76,10 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
         //Testing working normal or totally crashed
         //currently no crashed
         Toast.makeText(staffLocation.this, destLatitude + " + " + destLongtitude, Toast.LENGTH_SHORT).show();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }
         //end of testing here
 
         mapView = findViewById(R.id.staffMap);
@@ -114,7 +122,7 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
                 destinationMarker = map.addMarker(new MarkerOptions()
                         .icon(icon)
                         .position(latLng)
-                        .setTitle("Customer Destination"));
+                        .setTitle("Your Destination"));
 
                 map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 4000);
                 startTimer();

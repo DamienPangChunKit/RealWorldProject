@@ -3,4 +3,5 @@
     <color name="colorPrimary">#35557e</color>
     <color name="colorPrimaryDark">#35557e</color>
     <color name="colorAccent">#35557e</color>
+    <color name="legend_color">#31c6f7</color>
 </resources>

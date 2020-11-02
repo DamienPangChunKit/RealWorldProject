@@ -41,6 +41,7 @@ public class appointment extends AppCompatActivity {
     private String serviceOrder;
     private String dateTimeOrder;
 
+    public static final String EXTRA_SERVICE_ID = "com.example.damien.realworldproject.ID";
     public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
     public static final String EXTRA_LONGTITUDE = "com.example.damien.realworldproject.LONGTITUDE";
 
@@ -303,6 +304,7 @@ public class appointment extends AppCompatActivity {
             try{
                 i.putExtra(EXTRA_LATITUDE, latitude);
                 i.putExtra(EXTRA_LONGTITUDE, longtitude);
+                i.putExtra(EXTRA_SERVICE_ID,2);
                 startActivity(i);
             }
             catch(Exception e){
