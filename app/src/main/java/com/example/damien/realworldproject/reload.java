@@ -42,7 +42,7 @@ public class reload extends AppCompatActivity {
 
         mETCardNum = findViewById(R.id.eTCardNumber);
 
-
+        password = getIntent().getStringExtra(login.EXTRA_PASSWORD);
         id = getIntent().getIntExtra(login.EXTRA_ID, -1);
         totalAmt = getIntent().getFloatExtra(login.EXTRA_WALLET_BALANCE, -1);
 

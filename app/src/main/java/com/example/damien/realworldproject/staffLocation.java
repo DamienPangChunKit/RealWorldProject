@@ -92,6 +92,7 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
         //Testing working normal or totally crashed
         //currently no crashed
         Toast.makeText(staffLocation.this, destLatitude + " + " + destLongtitude, Toast.LENGTH_SHORT).show();
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 0);
