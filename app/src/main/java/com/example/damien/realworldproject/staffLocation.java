@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
@@ -28,6 +30,9 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.traffic.TrafficPlugin;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,11 +41,15 @@ import java.sql.ResultSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
+
 
 public class staffLocation extends AppCompatActivity implements OnMapReadyCallback{
 
     //public static final always put on the top
-    public static final int VIEW_CUSTOMER_DESTINATION = 38;
     public static final int VIEW_STAFF_LOCATION = 37;
 
     private int id;
@@ -56,6 +65,13 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
     private Marker staffLocationMarker;
     private TrafficPlugin trafficPlugin;
     private Timer timer;
+
+    public static final String DESTINATION_SOURCE_ID = "destination-source-id";
+    public static final String ICON_LAYER_ID = "icon-layer-id";
+    public static final String RED_PIN_ICON_ID = "red-pin-icon-id";
+    public static final String STAFF_SOURCE_ID = "staff-source-id";
+    public static final String ICON_LAYER_ID2 = "icon-layer-id2";
+    public static final String BLUE_PIN_ICON_ID = "blue-pin-icon-id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,14 +105,14 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
 
     }
 
-    private void startTimer() {
+    private void startTimer(Style style) {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                new Background().execute();
+                new Background(style).execute();
             }
-        },0, 10000);
+        },0, 3000);
     }
 
     @Override
@@ -117,21 +133,48 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
                         .zoom(16)
                         .target(latLng)
                         .build();
-                IconFactory iconFactory = IconFactory.getInstance(staffLocation.this);
-                Icon icon = iconFactory.fromResource(R.drawable.blue_marker);
-                destinationMarker = map.addMarker(new MarkerOptions()
-                        .icon(icon)
-                        .position(latLng)
-                        .setTitle("Your Destination"));
-
+//                IconFactory iconFactory = IconFactory.getInstance(staffLocation.this);
+//                Icon icon = iconFactory.fromResource(R.drawable.blue_marker);
+//                destinationMarker = map.addMarker(new MarkerOptions()
+//                        .icon(icon)
+//                        .position(latLng)
+//                        .setTitle("Your Destination"));
+                initSource(style);
+                initLayers(style);
                 map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 4000);
-                startTimer();
+                startTimer(style);
             }
         });
     }
 
+    private void initSource(@NonNull Style loadedMapStyle) {
+
+        Feature feature = Feature.fromGeometry(Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude()));
+        GeoJsonSource geoJsonSource = new GeoJsonSource(DESTINATION_SOURCE_ID, feature);
+        loadedMapStyle.addSource(geoJsonSource);
+
+//        Add the LineLayer to the map. This layer will display the directions route.
+    }
+
+    /**
+     * Add the route and marker icon layers to the map
+     */
+    private void initLayers(@NonNull Style loadedMapStyle) {
+
+        loadedMapStyle.addImage(RED_PIN_ICON_ID, BitmapUtils.getBitmapFromDrawable(
+                getResources().getDrawable(R.drawable.red_marker1)));
+
+        loadedMapStyle.addLayer(new SymbolLayer(ICON_LAYER_ID, DESTINATION_SOURCE_ID).withProperties(
+                iconImage(RED_PIN_ICON_ID),
+                iconIgnorePlacement(true),
+                iconAllowOverlap(true),
+                iconOffset(new Float[] {0f, -9f})));
+    }
+
+
     public class Background extends AsyncTask<Void, Void, LatLng> {
         private static final String LIBRARY = "com.mysql.jdbc.Driver";
+        private Style style;
 
         private static final String USERNAME = "sql12372307";
         private static final String DB_NAME = "sql12372307";
@@ -141,9 +184,10 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
         private Connection conn;
         private PreparedStatement stmt;
 
-        public Background() {
+        public Background(Style style) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
+            this.style = style;
         }
 
         @Override
@@ -157,22 +201,40 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
                 map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 4000);
                 Toast.makeText(staffLocation.this, "Staff haven't start his/her journey", Toast.LENGTH_SHORT).show();
             }
-            else if (staffLocationMarker == null) {
-                IconFactory iconFactory = IconFactory.getInstance(staffLocation.this);
-                Icon icon = iconFactory.fromResource(R.drawable.red_marker);
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(latLng1)
-                        .setTitle("Staff Current Location")
-                        .icon(icon);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .zoom(16)
-                        .target(latLng1)
-                        .build();
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 4000);
-                staffLocationMarker = map.addMarker(markerOptions);
-            }
-            else if (staffLocationMarker.getPosition() != latLng1) {
-                staffLocationMarker.setPosition(latLng1);
+            else {
+//                IconFactory iconFactory = IconFactory.getInstance(ViewMap.this);
+//                Icon icon = iconFactory.fromResource(R.drawable.red_marker);
+//                MarkerOptions markerOptions = new MarkerOptions()
+//                        .position(latLng1)
+//                        .setTitle("Staff Current Location")
+//                        .icon(icon);
+//                staffLocationMarker = map.addMarker(markerOptions);
+
+                GeoJsonSource geoJsonSource = style.getSourceAs(STAFF_SOURCE_ID);
+                if (geoJsonSource == null) {
+                    Feature feature = Feature.fromGeometry(Point.fromLngLat(latLng1.getLongitude(), latLng1.getLatitude()));
+                    geoJsonSource = new GeoJsonSource(STAFF_SOURCE_ID, feature);
+                    style.addSource(geoJsonSource);
+
+                    style.addImage(BLUE_PIN_ICON_ID, BitmapUtils.getBitmapFromDrawable(
+                            getResources().getDrawable(R.drawable.blue_marker1)));
+
+                    style.addLayer(new SymbolLayer(ICON_LAYER_ID2, STAFF_SOURCE_ID).withProperties(
+                            iconImage(BLUE_PIN_ICON_ID),
+                            iconIgnorePlacement(true),
+                            iconAllowOverlap(true),
+                            iconOffset(new Float[]{0f, -9f})));
+
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .zoom(16)
+                            .target(latLng1)
+                            .build();
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 4000);
+                }
+                else {
+                    Feature feature = Feature.fromGeometry(Point.fromLngLat(latLng1.getLongitude(), latLng1.getLatitude()));
+                    geoJsonSource.setGeoJson(feature);
+                }
             }
         }
 
@@ -196,6 +258,7 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
             catch (Exception e) {
                 Log.e("ERROR MySQL Statement", e.getMessage());
             }
+            closeConn();
             return latLng1;
         }
         private Connection connectDB() {
