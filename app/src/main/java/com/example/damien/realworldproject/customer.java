@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
-
 public class customer extends AppCompatActivity {
     TextView mTVMoney;
 
@@ -21,15 +20,17 @@ public class customer extends AppCompatActivity {
     private String phone_no;
     private String password;
     private String username;
+
+    //stafflocation variables
     private double latitude;
-    private double longtitude;
+    private double longitude;
+    //
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private Toolbar toolbar;
 
     public static int REQUEST_CODE = 49;
-    public static int REQUEST_CODE1 = 39;
     public static int REQUEST_CODE2 = 40;
 
     @Override
@@ -43,14 +44,10 @@ public class customer extends AppCompatActivity {
         password = getIntent().getStringExtra(login.EXTRA_PASSWORD);
         username = getIntent().getStringExtra(login.EXTRA_USERNAME);
 
-        latitude = getIntent().getDoubleExtra(appointment.EXTRA_LATITUDE,REQUEST_CODE1);
-        longtitude = getIntent().getDoubleExtra(appointment.EXTRA_LONGTITUDE,REQUEST_CODE1);
-
         mTVMoney = findViewById(R.id.tvMoney);
         mTVMoney.setText("RM " + totalAmt + "0");
 
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -59,11 +56,9 @@ public class customer extends AppCompatActivity {
         mToggle.syncState();
 
         NavigationView nvDrawer = (NavigationView)findViewById(R.id.nv);
-
         //call setupDrawerContent
         setupDrawerContent(nvDrawer);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
@@ -73,7 +68,6 @@ public class customer extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -84,7 +78,6 @@ public class customer extends AppCompatActivity {
                     }
                 });
     }
-
     public void selectDrawerItem(MenuItem menuItem) {
         Class aClass;
         switch(menuItem.getItemId()) {
@@ -103,10 +96,8 @@ public class customer extends AppCompatActivity {
             default:
                 aClass = profile.class;
         }
-
         // Close the navigation drawer
         mDrawerLayout.closeDrawers();
-
         Intent i = new Intent(this,aClass);
         i.putExtra(login.EXTRA_ID, id);
         i.putExtra(login.EXTRA_USERNAME, username);
@@ -128,6 +119,13 @@ public class customer extends AppCompatActivity {
         a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(a);
     }
+
+//    public void btnAppointment_onClicked(View view) {
+//        Intent i = new Intent(customer.this, appointment.class);
+//        i.putExtra(login.EXTRA_ID, id);
+//        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
+//        startActivity(i);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -167,17 +165,19 @@ public class customer extends AppCompatActivity {
         startActivityForResult(i, REQUEST_CODE2);
     }
 
+//    //added to intent to track staff location activity
     public void btnStaffLocation_onClicked(View view) {
         //testing only
         latitude = 5.412337;
-        longtitude = 100.317806;
+        longitude = 100.317806;
         //
 
         Intent i = new Intent(customer.this, staffLocation.class);
+        i.putExtra(appointment.EXTRA_SERVICE_ID,2);
         i.putExtra(appointment.EXTRA_LATITUDE, latitude);
-        i.putExtra(appointment.EXTRA_LONGTITUDE, longtitude);
+        i.putExtra(appointment.EXTRA_LONGITUDE, longitude);
         startActivity(i);
     }
-}
 
 }
+

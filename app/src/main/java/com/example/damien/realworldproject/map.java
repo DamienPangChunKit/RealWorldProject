@@ -65,9 +65,6 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
 
     public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
     public static final String EXTRA_LONGITUDE = "com.example.damien.realworldproject.LONGTITUDE";
-    public static int REQUEST_CODE = 48;
-
-    TextView TVLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +84,6 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-
-        TVLatLng = findViewById(R.id.tvLatLng);
     }
 
     @Override
@@ -149,6 +144,7 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
                             }
 
 // Use the map camera target's coordinates to make a reverse geocoding search
+//                            reverseGeocode(Point.fromLngLat(mapTargetLatLng.getLongitude(), mapTargetLatLng.getLatitude()));
                             Point point = Point.fromLngLat(mapTargetLatLng.getLongitude(), mapTargetLatLng.getLatitude());
                             reverseGeocode(point);
                             latitude = point.latitude();
@@ -177,6 +173,7 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
                         setResult(RESULT_OK, i);
                         finish();
                     }
+
 
                 });
             }
@@ -286,6 +283,7 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
                     latitude = point.latitude();
                     longtitude = point.longitude();
 
+
                     Toast.makeText(map.this, latitude + " " + longtitude, Toast.LENGTH_SHORT).show();
 
                     if (response.body() != null) {
@@ -303,6 +301,7 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
                                     }
                                 }
                             });
+
                         }
                     }
                 }

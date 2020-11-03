@@ -70,6 +70,7 @@
                 android:padding="15dp"
                 android:textColor="#D5D8D8"
                 android:textColorHint="#D5D8D8" />
+
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -175,7 +176,6 @@
                 android:textColor="#D5D8D8"
                 android:textSize="30dp"
                 android:textStyle="bold" />
-
             <Button
                 android:id="@+id/btnConfirm"
                 android:layout_width="100dp"
@@ -186,9 +186,7 @@
                 android:text="Confirm"
                 android:textStyle="bold" />
         </RelativeLayout>
-
     </LinearLayout>
-
     <Button
         android:id="@+id/getLocation"
         android:layout_width="fill_parent"

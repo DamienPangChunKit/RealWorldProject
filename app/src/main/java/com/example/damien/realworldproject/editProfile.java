@@ -11,44 +11,35 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 public class editProfile extends AppCompatActivity {
     private EditText mETusername;
     private EditText mETphone;
     private TextInputLayout mLayoutUsername;
     private TextInputLayout mLayoutPhone;
-
     private int id;
     private String username;
     private String phoneNo;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-
         mETusername = findViewById(R.id.ETusername);
         mETphone = findViewById(R.id.ETphone);
         mLayoutUsername = findViewById(R.id.layout_username);
         mLayoutPhone = findViewById(R.id.layout_phone_no);
-
         Intent i = getIntent();
         id = i.getIntExtra(login.EXTRA_ID, -1);
         username = i.getStringExtra(profile.USERNAME);
         phoneNo = i.getStringExtra(profile.PHONE);
-
         mETusername.setText(username);
         mETphone.setText(phoneNo);
     }
-
     private boolean validateUsername(){
         String usernameInput = mLayoutUsername.getEditText().getText().toString().trim();
-
         if (usernameInput.isEmpty()){
             mLayoutUsername.setError("This field cannot be empty!");
             return false;
@@ -60,10 +51,8 @@ public class editProfile extends AppCompatActivity {
             return true;
         }
     }
-
     private boolean validatePhone() {
         String phoneInput = mLayoutPhone.getEditText().getText().toString().trim();
-
         if (phoneInput.isEmpty()) {
             mLayoutPhone.setError("This field cannot be empty!");
             return false;
@@ -78,25 +67,21 @@ public class editProfile extends AppCompatActivity {
             return true;
         }
     }
-
     public void btnSave_onClick(View view) {
         if (!validateUsername() | !validatePhone()){
             return;
         } else {
             String usernameInput = mLayoutUsername.getEditText().getText().toString().trim();
             String phoneInput = mLayoutPhone.getEditText().getText().toString().trim();
-
             new Background().execute(usernameInput, phoneInput);
         }
     }
-
     public class Background extends AsyncTask<String, Void, String> {
         private static final String LIBRARY = "com.mysql.jdbc.Driver";
         private static final String USERNAME = "sql12372307";
         private static final String DB_NAME = "sql12372307";
         private static final String PASSWORD = "LYyljvuyn8";
         private static final String SERVER = "sql12.freemysqlhosting.net";
-
         private Connection conn;
         private PreparedStatement stmt;
         private ProgressDialog progressDialog;
@@ -107,12 +92,12 @@ public class editProfile extends AppCompatActivity {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.hide();
             closeConn();
+
 
             try {
                 if (result.isEmpty()) {
@@ -131,8 +116,6 @@ public class editProfile extends AppCompatActivity {
                 Toast.makeText(editProfile.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         }
-
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -141,7 +124,6 @@ public class editProfile extends AppCompatActivity {
             progressDialog.setMessage("Processing data");
             progressDialog.show();
         }
-
         @Override
         protected String doInBackground(String... strings) {
             conn = connectDB();
@@ -158,7 +140,6 @@ public class editProfile extends AppCompatActivity {
                 stmt.setString(2, phoneEdit);
                 stmt.setInt(3, id);
                 ResultSet result1 = stmt.executeQuery();
-
                 if (result1.next()) {
                     String uname = result1.getString(1);
                     String phNo = result1.getString(2);
@@ -172,7 +153,6 @@ public class editProfile extends AppCompatActivity {
                     stmt.setString(1, usernameEdit);
                     stmt.setString(2, phoneEdit);
                     stmt.setInt(3, id);
-
                     stmt.executeUpdate();
                 }
             }
@@ -181,7 +161,6 @@ public class editProfile extends AppCompatActivity {
             }
             return "";
         }
-
         private Connection connectDB() {
             try {
                 Class.forName(LIBRARY);
@@ -192,7 +171,6 @@ public class editProfile extends AppCompatActivity {
                 return null;
             }
         }
-
         public void closeConn () {
             try { stmt.close(); } catch (Exception e) { /* ignored */ }
             try { conn.close(); } catch (Exception e) { /* ignored */ }

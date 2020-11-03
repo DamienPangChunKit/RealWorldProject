@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -40,6 +39,7 @@ public class reload extends AppCompatActivity {
         layoutCardNumber = findViewById(R.id.textInputCardNumber);
         layoutAmount = findViewById(R.id.textInputAmount);
         layoutPassword = findViewById(R.id.textInputPass);
+
         mETCardNum = findViewById(R.id.eTCardNumber);
 
         password = getIntent().getStringExtra(login.EXTRA_PASSWORD);
