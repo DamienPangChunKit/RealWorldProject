@@ -81,11 +81,11 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
 
         Bundle i = getIntent().getExtras();
 
-        id = i.getInt(appointment.EXTRA_SERVICE_ID);
         //pass to track staff location activity
         //testing the variables
+        id = i.getInt(appointment.EXTRA_SERVICE_ID);
         destLatitude = i.getDouble(appointment.EXTRA_LATITUDE);
-        destLongtitude = i.getDouble(appointment.EXTRA_LONGTITUDE);
+        destLongtitude = i.getDouble(appointment.EXTRA_LONGITUDE);
 
         latLng = new LatLng(destLatitude,destLongtitude);
 

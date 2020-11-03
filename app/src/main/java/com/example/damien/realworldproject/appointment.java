@@ -7,11 +7,11 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,11 +29,6 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import static android.provider.Telephony.Carriers.PASSWORD;
-import static com.example.damien.realworldproject.appointment.Background.LIBRARY;
-import static com.example.damien.realworldproject.profile.USERNAME;
-import static java.net.Authenticator.RequestorType.SERVER;
 
 public class appointment extends AppCompatActivity {
     EditText date_time;
@@ -58,6 +54,10 @@ public class appointment extends AppCompatActivity {
     private String dateTimeOrder;
 
     private boolean[] checkedServiceType;
+
+    public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
+    public static final String EXTRA_LONGITUDE = "com.example.damien.realworldproject.LONGITUDE";
+    public static final String EXTRA_SERVICE_ID = "com.example.damien.realworldproject.LONGITUDE";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
