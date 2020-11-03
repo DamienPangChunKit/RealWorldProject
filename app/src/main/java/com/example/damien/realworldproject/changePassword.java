@@ -10,14 +10,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.regex.Pattern;
-
 public class changePassword extends AppCompatActivity {  ////// I try to set text and see value of id but it straight crashed and run back to login page
     private static final Pattern PASSWORD_PATTERN =     /////// So mostly is id problem causes it cannot update password
             Pattern.compile("^" +
@@ -25,28 +23,22 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
                     "(?=.*[a-zA-Z])" +   // any letter
                     "(.{8,})" +        // at least 6, at most 20 character
                     "$");
-
     private TextInputLayout mLayoutOldPassword;
     private TextInputLayout mLayoutNewPassword;
-
     private int id;
     private String oldPassword;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-
         mLayoutOldPassword = findViewById(R.id.layout_oldPassword);
         mLayoutNewPassword = findViewById(R.id.layout_newPassword);
-
         id = getIntent().getIntExtra(login.EXTRA_ID, -1);
         oldPassword = getIntent().getStringExtra(login.EXTRA_PASSWORD);
-
     }
 
     private boolean validateOldPassword(){
-        String oldInput = mLayoutOldPassword.getEditText().getText().toString().trim();
+        String oldInput = mLayoutOldPassword.getEditText().getText().toString();
 
         if (oldInput.isEmpty()) {
             mLayoutOldPassword.setError("This field cannot be empty!");
@@ -64,8 +56,8 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
     }
 
     private boolean validateNewPassword(){
-        String oldInput = mLayoutOldPassword.getEditText().getText().toString().trim();
-        String newInput = mLayoutNewPassword.getEditText().getText().toString().trim();
+        String oldInput = mLayoutOldPassword.getEditText().getText().toString();
+        String newInput = mLayoutNewPassword.getEditText().getText().toString();
 
         if (newInput.isEmpty()) {
             mLayoutNewPassword.setError("This field cannot be empty!");
@@ -81,19 +73,17 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
             return true;
         }
     }
-
     public void btnSavePassword_onClick(View view) {
         if (!validateOldPassword() | !validateNewPassword()){
             return;
         } else {
-            String newInput = mLayoutNewPassword.getEditText().getText().toString().trim();
+            String newInput = mLayoutNewPassword.getEditText().getText().toString();
             String hashed_password = MD5(newInput);
 
             Background bg = new Background();
             bg.execute(hashed_password);
         }
     }
-
     public static String MD5(String password) {
         byte[] bytes = password.getBytes();
         MessageDigest md = null;
@@ -103,36 +93,30 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
         catch (NoSuchAlgorithmException e) {}
         byte[] hashed_password = md.digest(bytes);
         StringBuilder sb = new StringBuilder();
-
         for (byte b: hashed_password) {
             sb.append(String.format("%02x", b));
         }
-
         return sb.toString();
     }
-
     public class Background extends AsyncTask<String, Void, String> {
         private static final String LIBRARY = "com.mysql.jdbc.Driver";
         private static final String USERNAME = "sql12372307";
         private static final String DB_NAME = "sql12372307";
         private static final String PASSWORD = "LYyljvuyn8";
         private static final String SERVER = "sql12.freemysqlhosting.net";
-
         private Connection conn;
         private PreparedStatement stmt;
         private ProgressDialog progressDialog;
-
         public Background() {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             progressDialog.hide();
             closeConn();
-            String newInput = mLayoutNewPassword.getEditText().getText().toString().trim();
+            String newInput = mLayoutNewPassword.getEditText().getText().toString();
 
             try {
                 if (result.isEmpty()) {
@@ -150,8 +134,6 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
                 Toast.makeText(changePassword.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         }
-
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -160,11 +142,9 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
             progressDialog.setMessage("Processing data");
             progressDialog.show();
         }
-
         @Override
         protected String doInBackground(String... strings) {
             conn = connectDB();
-
             if (conn == null) {
                 return null;
             }
@@ -180,7 +160,6 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
             }
             return "";
         }
-
         private Connection connectDB() {
             try {
                 Class.forName(LIBRARY);
@@ -191,7 +170,6 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
                 return null;
             }
         }
-
         public void closeConn () {
             try { stmt.close(); } catch (Exception e) { /* ignored */ }
             try { conn.close(); } catch (Exception e) { /* ignored */ }

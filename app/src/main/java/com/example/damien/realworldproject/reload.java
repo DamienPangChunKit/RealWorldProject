@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,28 +16,32 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class reload extends AppCompatActivity {
-    EditText mETCardNum;
-    EditText mETAmount;
-    TextView mTextView;
+    private TextInputLayout layoutCardNumber;
+    private TextInputLayout layoutAmount;
+    private TextInputLayout layoutPassword;
+    private EditText mETCardNum;
 
     private int id;
     private float totalAmt;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reload);
 
+        layoutCardNumber = findViewById(R.id.textInputCardNumber);
+        layoutAmount = findViewById(R.id.textInputAmount);
+        layoutPassword = findViewById(R.id.textInputPass);
+
         mETCardNum = findViewById(R.id.eTCardNumber);
-        mETAmount = findViewById(R.id.eTAmount);
-        mTextView = findViewById(R.id.textView);
+
 
         id = getIntent().getIntExtra(login.EXTRA_ID, -1);
         totalAmt = getIntent().getFloatExtra(login.EXTRA_WALLET_BALANCE, -1);
@@ -75,7 +80,7 @@ public class reload extends AppCompatActivity {
     }
 
     public void btnReload_onClicked(View view) {
-        if (!validateCardNumber() | !validateAmount()){
+        if (!validateCardNumber() | !validateAmount() | !validatePassword()){
             return;
         } else {
             openConfirmationReload();
@@ -83,8 +88,8 @@ public class reload extends AppCompatActivity {
     }
 
     private void openConfirmationReload() {
-        String cardNum = mETCardNum.getText().toString();
-        String a = mETAmount.getText().toString();
+        String cardNum = layoutCardNumber.getEditText().getText().toString();
+        String a = layoutAmount.getEditText().getText().toString();
         final int amount = Integer.parseInt(a);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(reload.this);
@@ -116,35 +121,50 @@ public class reload extends AppCompatActivity {
     }
 
     private boolean validateCardNumber() {
-        String cardNum = mETCardNum.getText().toString();
+        String cardNum = layoutCardNumber.getEditText().getText().toString();
 
         if (cardNum.isEmpty()){
-            mETCardNum.setError("This field cannot be empty!");
+            layoutCardNumber.setError("This field cannot be empty!");
             return false;
         } else if (cardNum.length() != 19){
-            mETCardNum.setError("Please enter only 16 digit number!");
+            layoutCardNumber.setError("Please enter only 16 digit number!");
             return false;
         } else {
-            mETCardNum.setError(null);
+            layoutCardNumber.setError(null);
             return true;
         }
     }
 
     private boolean validateAmount(){
-        String amt = mETAmount.getText().toString();
+        String amt = layoutAmount.getEditText().getText().toString();
         int amountTOP = Integer.parseInt(amt);
 
         if (amt.isEmpty()){
-            mETAmount.setError("This field cannot be empty!");
+            layoutAmount.setError("This field cannot be empty!");
             return false;
         } else if (amountTOP < 10) {
-            mETAmount.setError("Please reload at least RM 10!");
+            layoutAmount.setError("Please reload at least RM 10!");
             return false;
         } else if (amountTOP > 1000) {
-            mETAmount.setError("Only can reload a maximum RM 1000!");
+            layoutAmount.setError("Only can reload a maximum RM 1000!");
             return false;
         } else {
-            mETAmount.setError(null);
+            layoutAmount.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validatePassword(){
+        String passwordInput = layoutPassword.getEditText().getText().toString();
+
+        if (passwordInput.isEmpty()) {
+            layoutPassword.setError("This field cannot be empty!");
+            return false;
+        } else if (!passwordInput.equals(password)) {
+            layoutPassword.setError("Password does not match to the old one!");
+            return false;
+        } else {
+            layoutPassword.setError(null);
             return true;
         }
     }

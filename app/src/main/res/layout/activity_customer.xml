@@ -10,7 +10,6 @@
     tools:openDrawer="start">
 
     <!-- This LinearLayout represents the contents of the screen  -->
-
     <!-- The ActionBar displayed at the top -->
     <include
         layout="@layout/app_bar_main"
@@ -18,7 +17,6 @@
         android:layout_height="match_parent" />
 
     <!-- The main content view where fragments are loaded -->
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -100,12 +98,10 @@
             android:layout_marginTop="160dp"
             android:background="@drawable/roundedbutton"
             android:text="3"
-            android:onClick="btnStaffLocation_onClicked"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
-
     <!-- The navigation drawer that comes from the left -->
     <!-- Note that android:layout_gravity needs to be set to 'start' -->
     <android.support.design.widget.NavigationView
