@@ -30,6 +30,7 @@ public class customer extends AppCompatActivity {
 
     public static int REQUEST_CODE = 49;
     public static int REQUEST_CODE1 = 39;
+    public static int REQUEST_CODE2 = 40;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +43,8 @@ public class customer extends AppCompatActivity {
         password = getIntent().getStringExtra(login.EXTRA_PASSWORD);
         username = getIntent().getStringExtra(login.EXTRA_USERNAME);
 
-        //pass to track staff location activity
         latitude = getIntent().getDoubleExtra(appointment.EXTRA_LATITUDE,REQUEST_CODE1);
         longtitude = getIntent().getDoubleExtra(appointment.EXTRA_LONGTITUDE,REQUEST_CODE1);
-
 
         mTVMoney = findViewById(R.id.tvMoney);
         mTVMoney.setText("RM " + totalAmt + "0");
@@ -130,13 +129,6 @@ public class customer extends AppCompatActivity {
         startActivity(a);
     }
 
-    public void btnAppointment_onClicked(View view) {
-        Intent i = new Intent(customer.this, appointment.class);
-        i.putExtra(login.EXTRA_ID, id);
-        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
-        startActivity(i);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -152,16 +144,29 @@ public class customer extends AppCompatActivity {
                 phone_no = data.getStringExtra("PHONE_EDIT");
             }
         }
+        else if(requestCode == REQUEST_CODE2){
+            if(resultCode == RESULT_OK){
+                totalAmt = data.getFloatExtra("TOTAL_AMOUNT_AFTER_PAID", 0);
+                mTVMoney.setText("RM " + totalAmt + "0");
+            }
+        }
     }
 
     public void btnReload_onClicked(View view) {
         Intent i = new Intent(customer.this, reload.class);
         i.putExtra(login.EXTRA_ID, id);
         i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
+        i.putExtra(login.EXTRA_PASSWORD, password);
         startActivityForResult(i, 1);
     }
 
-    //added to intent to track staff location activity
+    public void btnAppointment_onClicked(View view) {
+        Intent i = new Intent(customer.this, appointment.class);
+        i.putExtra(login.EXTRA_ID, id);
+        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
+        startActivityForResult(i, REQUEST_CODE2);
+    }
+
     public void btnStaffLocation_onClicked(View view) {
         //testing only
         latitude = 5.412337;
@@ -169,9 +174,10 @@ public class customer extends AppCompatActivity {
         //
 
         Intent i = new Intent(customer.this, staffLocation.class);
-        i.putExtra(appointment.EXTRA_SERVICE_ID,2);
         i.putExtra(appointment.EXTRA_LATITUDE, latitude);
         i.putExtra(appointment.EXTRA_LONGTITUDE, longtitude);
         startActivity(i);
     }
+}
+
 }

@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#D5D8D8"
-            android:paddingBottom="40dp"
+            android:paddingBottom="20dp"
             app:counterMaxLength="19"
             app:counterEnabled="true"
             app:errorEnabled="true"
@@ -81,7 +81,8 @@
             android:id="@+id/textInputAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="100dp"
+            android:paddingBottom="20dp"
+            app:errorEnabled="true"
             android:textColor="#D5D8D8"
             android:textColorHint="#D5D8D8">
 
@@ -94,6 +95,30 @@
                 android:hint="Amount"
                 android:digits="0123456789"
                 android:inputType="phone"
+                android:padding="15dp"
+                android:textColor="#D5D8D8"
+                android:textColorHint="#D5D8D8" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputPass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="70dp"
+            app:errorEnabled="true"
+            app:passwordToggleEnabled="true"
+            android:textColor="#D5D8D8"
+            android:textColorHint="#D5D8D8">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/eTPass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="50dp"
+                android:layout_marginStart="50dp"
+                android:hint="Password"
+                android:inputType="textPassword"
                 android:padding="15dp"
                 android:textColor="#D5D8D8"
                 android:textColorHint="#D5D8D8" />

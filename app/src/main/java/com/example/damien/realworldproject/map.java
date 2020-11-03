@@ -3,6 +3,7 @@ package com.example.damien.realworldproject;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapbox.android.core.permissions.PermissionsListener;
@@ -62,7 +64,10 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
     private double latitude, longtitude;
 
     public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
-    public static final String EXTRA_LONGTITUDE = "com.example.damien.realworldproject.LONGTITUDE";
+    public static final String EXTRA_LONGITUDE = "com.example.damien.realworldproject.LONGTITUDE";
+    public static int REQUEST_CODE = 48;
+
+    TextView TVLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,8 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        TVLatLng = findViewById(R.id.tvLatLng);
     }
 
     @Override
@@ -142,7 +149,10 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
                             }
 
 // Use the map camera target's coordinates to make a reverse geocoding search
-                            reverseGeocode(Point.fromLngLat(mapTargetLatLng.getLongitude(), mapTargetLatLng.getLatitude()));
+                            Point point = Point.fromLngLat(mapTargetLatLng.getLongitude(), mapTargetLatLng.getLatitude());
+                            reverseGeocode(point);
+                            latitude = point.latitude();
+                            longtitude = point.longitude();
 
                         } else {
 
@@ -161,12 +171,12 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
                             }
                         }
 
-                        Intent i = new Intent(map.this, appointment.class);
+                        Intent i = new Intent();
                         i.putExtra(EXTRA_LATITUDE, latitude);
-                        i.putExtra(EXTRA_LONGTITUDE, longtitude);
-                        startActivity(i);
+                        i.putExtra(EXTRA_LONGITUDE, longtitude);
+                        setResult(RESULT_OK, i);
+                        finish();
                     }
-
 
                 });
             }
@@ -276,7 +286,6 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
                     latitude = point.latitude();
                     longtitude = point.longitude();
 
-
                     Toast.makeText(map.this, latitude + " " + longtitude, Toast.LENGTH_SHORT).show();
 
                     if (response.body() != null) {
@@ -294,14 +303,7 @@ public class map extends AppCompatActivity implements PermissionsListener, OnMap
                                     }
                                 }
                             });
-
                         }
-                        /*
-                        else {
-                            Toast.makeText(MainActivity.this,
-                                     "Location Not Found",Toast.LENGTH_SHORT).show();
-                        }
-                        */
                     }
                 }
 

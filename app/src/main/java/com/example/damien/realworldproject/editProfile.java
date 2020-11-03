@@ -114,8 +114,6 @@ public class editProfile extends AppCompatActivity {
             progressDialog.hide();
             closeConn();
 
-
-
             try {
                 if (result.isEmpty()) {
                     Intent i = new Intent();

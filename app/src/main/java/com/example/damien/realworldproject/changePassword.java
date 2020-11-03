@@ -46,7 +46,7 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
     }
 
     private boolean validateOldPassword(){
-        String oldInput = mLayoutOldPassword.getEditText().getText().toString().trim();
+        String oldInput = mLayoutOldPassword.getEditText().getText().toString();
 
         if (oldInput.isEmpty()) {
             mLayoutOldPassword.setError("This field cannot be empty!");
@@ -64,8 +64,8 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
     }
 
     private boolean validateNewPassword(){
-        String oldInput = mLayoutOldPassword.getEditText().getText().toString().trim();
-        String newInput = mLayoutNewPassword.getEditText().getText().toString().trim();
+        String oldInput = mLayoutOldPassword.getEditText().getText().toString();
+        String newInput = mLayoutNewPassword.getEditText().getText().toString();
 
         if (newInput.isEmpty()) {
             mLayoutNewPassword.setError("This field cannot be empty!");
@@ -86,7 +86,7 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
         if (!validateOldPassword() | !validateNewPassword()){
             return;
         } else {
-            String newInput = mLayoutNewPassword.getEditText().getText().toString().trim();
+            String newInput = mLayoutNewPassword.getEditText().getText().toString();
             String hashed_password = MD5(newInput);
 
             Background bg = new Background();
@@ -132,7 +132,7 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
             super.onPostExecute(result);
             progressDialog.hide();
             closeConn();
-            String newInput = mLayoutNewPassword.getEditText().getText().toString().trim();
+            String newInput = mLayoutNewPassword.getEditText().getText().toString();
 
             try {
                 if (result.isEmpty()) {

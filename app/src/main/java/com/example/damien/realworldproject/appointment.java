@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -23,6 +25,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,7 +33,16 @@ import java.util.Calendar;
 public class appointment extends AppCompatActivity {
     EditText date_time;
     EditText serviceType;
+    EditText unitFloor;
+    EditText buildingName;
+    TextView TVLatLng;
 
+    private TextInputLayout layoutDateTime;
+    private TextInputLayout layoutServiceType;
+    private TextInputLayout layoutUnitFloor;
+    private TextInputLayout layoutBuildingName;
+    private TextInputLayout layoutDescription;
+    private TextInputLayout layoutLatLng;
     private TextView mTVTotalPayment;
 
     private boolean[] checkedServiceType;
@@ -41,19 +53,28 @@ public class appointment extends AppCompatActivity {
     private String serviceOrder;
     private String dateTimeOrder;
 
-    public static final String EXTRA_SERVICE_ID = "com.example.damien.realworldproject.ID";
-    public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
-    public static final String EXTRA_LONGTITUDE = "com.example.damien.realworldproject.LONGTITUDE";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
 
+        layoutDateTime = findViewById(R.id.textInputDateTime);
+        layoutServiceType = findViewById(R.id.textInputServiceType);
+        layoutUnitFloor = findViewById(R.id.textInputUnitFloor);
+        layoutBuildingName = findViewById(R.id.textInputBuildingName);
+        layoutDescription = findViewById(R.id.textInputDescription);
+        layoutLatLng = findViewById(R.id.textInputLatLng);
+
         id = getIntent().getIntExtra(login.EXTRA_ID, -1);
         totalAmt = getIntent().getFloatExtra(login.EXTRA_WALLET_BALANCE, -1);
-        latitude = getIntent().getDoubleExtra(map.EXTRA_LATITUDE, -1);
-        longtitude = getIntent().getDoubleExtra(map.EXTRA_LONGTITUDE, -1);
+        latitude = getIntent().getDoubleExtra(map.EXTRA_LATITUDE, 0);
+        longtitude = getIntent().getDoubleExtra(map.EXTRA_LONGITUDE, 0);
+
+        unitFloor = findViewById(R.id.eTUnitFloor);
+        buildingName = findViewById(R.id.eTBuildingName);
+        TVLatLng = findViewById(R.id.tvLatLng);
+        TVLatLng.setText("Latitude  : " + latitude + "\n"
+                + "Longtitude: " + longtitude);
 
         date_time = findViewById(R.id.eTDateTime);
         date_time.setInputType(InputType.TYPE_NULL);
@@ -136,14 +157,29 @@ public class appointment extends AppCompatActivity {
         mTVTotalPayment = findViewById(R.id.tvTotalPayment);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 5){
+            if (resultCode == RESULT_OK){
+                latitude = data.getDoubleExtra(map.EXTRA_LATITUDE, 0);
+                longtitude = data.getDoubleExtra(map.EXTRA_LONGITUDE, 0);
+
+                TVLatLng.setText("Latitude  : " + latitude + "\n"
+                        + "Longtitude: " + longtitude);
+
+            }
+        }
+    }
+
     private boolean validateServiceType(){
         String serviceTypeInput = serviceType.getText().toString();
 
         if (serviceTypeInput.isEmpty()){
-            serviceType.setError("This field cannot be empty!");
+            layoutServiceType.setError("This field cannot be empty!");
             return false;
         } else {
-            serviceType.setError(null);
+            layoutServiceType.setError(null);
             return true;
         }
     }
@@ -152,10 +188,44 @@ public class appointment extends AppCompatActivity {
         String dateTimeInput = date_time.getText().toString();
 
         if (dateTimeInput.isEmpty()){
-            date_time.setError("This field cannot be empty!");
+            layoutDateTime.setError("This field cannot be empty!");
             return false;
         } else {
-            date_time.setError(null);
+            layoutDateTime.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validateUnitFloor(){
+        String unitFloorInput = unitFloor.getText().toString();
+
+        if (unitFloorInput.isEmpty()){
+            layoutUnitFloor.setError("This field cannot be empty!");
+            return false;
+        } else {
+            layoutUnitFloor.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validateBuildingName(){
+        String buidingNameInput = buildingName.getText().toString();
+
+        if (buidingNameInput.isEmpty()){
+            layoutBuildingName.setError("This field cannot be empty!");
+            return false;
+        } else {
+            layoutBuildingName.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validateLatLng(){
+        if (latitude == 0 | longtitude == 0){
+            layoutLatLng.setError("Please choose location before making appointment!");
+            return false;
+        } else {
+            layoutLatLng.setError(null);
             return true;
         }
     }
@@ -175,7 +245,7 @@ public class appointment extends AppCompatActivity {
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
 
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss");
 
                         Calendar checkC = Calendar.getInstance();
@@ -206,42 +276,50 @@ public class appointment extends AppCompatActivity {
     }
 
     public void btnConfirm_onClicked(View view) {
-        if (!validateServiceType() | !validateDateTime()){
+        if (!validateServiceType() | !validateDateTime() | !validateUnitFloor() | !validateBuildingName() | !validateLatLng()){
             return;
         } else {
             openConfirmationDialog();
         }
     }
 
-// Havent add location msg or maybe no need add
+    // Havent add location msg or maybe no need add
     private void openConfirmationDialog() {
         DecimalFormat format = new DecimalFormat("##.00");
         String formattedTotal = format.format(totalPayment);
         String msgDateTime = date_time.getText().toString();
+        String address =  unitFloor.getText().toString() + ", " + buildingName.getText().toString();
+        String descriptionInput = layoutDescription.getEditText().getText().toString();
+
+        if (descriptionInput.isEmpty()){
+            descriptionInput = "No description";
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(appointment.this);
         builder.setTitle("Are you sure want to made Appointment ?");
         if (serviceType.getText().toString().equals("Service Type 1 and 2")){
             builder.setMessage("Service Type 1    - RM   50.00 " + "\n"
-                            + "Service Type 2    - RM   73.00 " + "\n\n"
-                            + "Total Payment    - RM " + formattedTotal + "\n"
-                            + msgDateTime);
+                    + "Service Type 2    - RM   73.00 " + "\n\n"
+                    + "Total Payment    - RM " + formattedTotal + "\n"
+                    + msgDateTime + "\n"
+                    + "Address     : " + address + "\n"
+                    + "Description: " + descriptionInput);
         } else {
             builder.setMessage(serviceType.getText().toString() + "    - RM   " + formattedTotal + "\n\n"
-                            + "Total Payment    - RM   " + formattedTotal + "\n"
-                            + msgDateTime);
+                    + "Total Payment    - RM   " + formattedTotal + "\n"
+                    + msgDateTime + "\n"
+                    + "Address     : " + address + "\n"
+                    + "Description: " + descriptionInput);
         }
 
+        String finalDescriptionInput = descriptionInput;
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(appointment.this, customer.class);
-                startActivity(i);
-
                 totalAmt = (float) (totalAmt - totalPayment);
 
                 Background bg = new Background();
-                bg.execute(String.valueOf(id), serviceOrder, String.valueOf(latitude), String.valueOf(longtitude), dateTimeOrder, String.valueOf(totalAmt));
+                bg.execute(String.valueOf(id), serviceOrder, String.valueOf(latitude), String.valueOf(longtitude), dateTimeOrder, String.valueOf(totalAmt), address, String.valueOf(totalPayment), String.valueOf(finalDescriptionInput));
             }
         });
 
@@ -261,7 +339,7 @@ public class appointment extends AppCompatActivity {
 
     public void btnGetLocation_onClicked(View view) {
         Intent i = new Intent(appointment.this, map.class);
-        startActivity(i);
+        startActivityForResult(i, 5);
     }
 
     public class Background extends AsyncTask<String, Void, ResultSet> {
@@ -286,7 +364,7 @@ public class appointment extends AppCompatActivity {
             Intent i = new Intent();
 
             try {
-                i.putExtra("TOTAL_AMOUNT", totalAmt);
+                i.putExtra("TOTAL_AMOUNT_AFTER_PAID", totalAmt);
                 setResult(RESULT_OK, i);
                 finish();
             }
@@ -295,21 +373,9 @@ public class appointment extends AppCompatActivity {
                 Toast.makeText(appointment.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
             finally {
-                progressDialog.hide();
+                //progressDialog.hide();
                 try { result.close(); } catch (Exception e) { /* ignored */ }
                 closeConn();
-            }
-
-            //testing
-            try{
-                i.putExtra(EXTRA_LATITUDE, latitude);
-                i.putExtra(EXTRA_LONGTITUDE, longtitude);
-                i.putExtra(EXTRA_SERVICE_ID,2);
-                startActivity(i);
-            }
-            catch(Exception e){
-                Log.e("ERROR DETECTED", e.getMessage());
-                Toast.makeText(appointment.this, "Failed to intent back mpa data", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -321,24 +387,33 @@ public class appointment extends AppCompatActivity {
             progressDialog = new ProgressDialog(appointment.this);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage("Processing data");
-            progressDialog.show();
+            // progressDialog.show();
         }
 
         @Override
         protected ResultSet doInBackground(String... strings) {
             conn = connectDB();
             ResultSet result = null;
+
+            Calendar calendar = Calendar.getInstance();
+            Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+
             if (conn == null) {
                 return null;
             }
             try {
-                String query = "insert into service_request (customer_id, service_type, destination_latitude, destination_longtitude, appointment_datetime) values (?, ?, ?, ?, ?)";
+                String query = "insert into service_request (customer_id, service_type, destination_latitude, destination_longitude, appointment_datetime, destination_address, payment_amount, status, request_datetime, service_description) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 stmt = conn.prepareStatement(query);
                 stmt.setInt(1, Integer.parseInt(strings[0]));
                 stmt.setString(2, strings[1]);
                 stmt.setDouble(3, Double.parseDouble(strings[2]));
                 stmt.setDouble(4, Double.parseDouble(strings[3]));
                 stmt.setString(5, strings[4]);
+                stmt.setString(6, strings[6]);
+                stmt.setFloat(7, Float.parseFloat(strings[7]));
+                stmt.setString(8, "pending assign staff");
+                stmt.setTimestamp(9, timestamp);
+                stmt.setString(10, strings[8]);
 
                 String query2 = "UPDATE account SET wallet_balance = ? WHERE id = ?";
                 stmt2 = conn.prepareStatement(query2);
