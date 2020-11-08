@@ -69,13 +69,13 @@
             android:id="@+id/btnAppointment"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="42dp"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="160dp"
             android:background="@drawable/roundedbutton"
             android:text="1"
             android:onClick="btnAppointment_onClicked"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnReload"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -94,10 +94,24 @@
             android:id="@+id/btnMyActivity"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginEnd="42dp"
             android:layout_marginTop="160dp"
             android:background="@drawable/roundedbutton"
             android:text="3"
+            android:onClick="btnStaffLocation_onClicked"
+            app:layout_constraintStart_toEndOf="@id/btnReload"
+            app:layout_constraintEnd_toStartOf="@id/btnCheckAppointment"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnCheckAppointment"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="160dp"
+            android:background="@drawable/roundedbutton"
+            android:text="4"
+            android:onClick="btnCheckAppointment_onClicked"
+            app:layout_constraintStart_toEndOf="@id/btnMyActivity"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

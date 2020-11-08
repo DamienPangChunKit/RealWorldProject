@@ -1,6 +1,7 @@
 package com.example.damien.realworldproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
+
 public class customer extends AppCompatActivity {
     TextView mTVMoney;
 
@@ -24,7 +27,6 @@ public class customer extends AppCompatActivity {
     //stafflocation variables
     private double latitude;
     private double longitude;
-    //
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
@@ -32,6 +34,7 @@ public class customer extends AppCompatActivity {
 
     public static int REQUEST_CODE = 49;
     public static int REQUEST_CODE2 = 40;
+    public static int REQUEST_CODE10 = 97;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class customer extends AppCompatActivity {
         NavigationView nvDrawer = (NavigationView)findViewById(R.id.nv);
         //call setupDrawerContent
         setupDrawerContent(nvDrawer);
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -120,13 +124,6 @@ public class customer extends AppCompatActivity {
         startActivity(a);
     }
 
-//    public void btnAppointment_onClicked(View view) {
-//        Intent i = new Intent(customer.this, appointment.class);
-//        i.putExtra(login.EXTRA_ID, id);
-//        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
-//        startActivity(i);
-//    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -144,8 +141,15 @@ public class customer extends AppCompatActivity {
         }
         else if(requestCode == REQUEST_CODE2){
             if(resultCode == RESULT_OK){
+                totalAmt = data.getFloatExtra("TOTAL_AMOUNT", 0);
+                mTVMoney.setText("RM " + totalAmt + "0");
+            }
+        }
+        else if(requestCode == REQUEST_CODE10){
+            if(resultCode == RESULT_OK){
                 totalAmt = data.getFloatExtra("TOTAL_AMOUNT_AFTER_PAID", 0);
                 mTVMoney.setText("RM " + totalAmt + "0");
+                Toast.makeText(this, "Payment Successfully! Thank you for using Ebox Salon!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -165,12 +169,10 @@ public class customer extends AppCompatActivity {
         startActivityForResult(i, REQUEST_CODE2);
     }
 
-//    //added to intent to track staff location activity
     public void btnStaffLocation_onClicked(View view) {
         //testing only
         latitude = 5.412337;
         longitude = 100.317806;
-        //
 
         Intent i = new Intent(customer.this, staffLocation.class);
         i.putExtra(appointment.EXTRA_SERVICE_ID,2);
@@ -179,5 +181,10 @@ public class customer extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void btnCheckAppointment_onClicked(View view) {
+        Intent i = new Intent(customer.this, checkAppointment.class);
+        i.putExtra(login.EXTRA_ID, id);
+        i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
+        startActivityForResult(i, REQUEST_CODE10);
+    }
 }
-
