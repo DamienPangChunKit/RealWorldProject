@@ -322,10 +322,8 @@ public class appointment extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                totalAmt = (float) (totalAmt - totalPayment);
-
                 Background bg = new Background();
-                bg.execute(String.valueOf(id), serviceOrder, String.valueOf(latitude), String.valueOf(longitude), dateTimeOrder, String.valueOf(totalAmt), address, String.valueOf(totalPayment), String.valueOf(finalDescriptionInput));
+                bg.execute(String.valueOf(id), serviceOrder, String.valueOf(latitude), String.valueOf(longitude), dateTimeOrder, address, String.valueOf(totalPayment), String.valueOf(finalDescriptionInput));
             }
         });
 
@@ -364,10 +362,10 @@ public class appointment extends AppCompatActivity {
             @Override
             protected void onPostExecute(ResultSet result) {
                 super.onPostExecute(result);
-                Intent i = new Intent();
 
                 try {
-                    i.putExtra("TOTAL_AMOUNT_AFTER_PAID", totalAmt);
+                    Intent i = new Intent();
+                    i.putExtra("TOTAL_AMOUNT", totalAmt);
                     setResult(RESULT_OK, i);
                     finish();
                 }
@@ -410,18 +408,13 @@ public class appointment extends AppCompatActivity {
                     stmt.setDouble(3, Double.parseDouble(strings[2]));
                     stmt.setDouble(4, Double.parseDouble(strings[3]));
                     stmt.setString(5, strings[4]);
-                    stmt.setString(6, strings[6]);
-                    stmt.setFloat(7, Float.parseFloat(strings[7]));
+                    stmt.setString(6, strings[5]);
+                    stmt.setFloat(7, Float.parseFloat(strings[6]));
                     stmt.setString(8, "pending assign staff");
                     stmt.setTimestamp(9, timestamp);
-                    stmt.setString(10, strings[8]);
+                    stmt.setString(10, strings[7]);
 
-                    String query2 = "UPDATE account SET wallet_balance = ? WHERE id = ?";
-                    stmt2 = conn.prepareStatement(query2);
-                    stmt2.setFloat(1, Float.parseFloat(strings[5]));
-                    stmt2.setInt(2, Integer.parseInt(strings[0]));
                     stmt.executeUpdate();
-                    stmt2.executeUpdate();
                 }
                 catch (Exception e) {
                     Log.e("ERROR MySQL Statement", e.getMessage());

@@ -31,7 +31,7 @@ public class profile extends AppCompatActivity {
         id = getIntent().getIntExtra(login.EXTRA_ID, -1);
         username = getIntent().getStringExtra(login.EXTRA_USERNAME);
         phoneNo = getIntent().getStringExtra(login.EXTRA_PHONE);
-        
+
         mTVusername.setText(username);
         mTVphone.setText(phoneNo);
     }
