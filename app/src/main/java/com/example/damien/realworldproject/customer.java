@@ -173,7 +173,8 @@ public class customer extends AppCompatActivity {
         //
 
         Intent i = new Intent(customer.this, staffLocation.class);
-        i.putExtra(appointment.EXTRA_SERVICE_ID,2);
+//        i.putExtra(appointment.EXTRA_SERVICE_ID,id);
+        i.putExtra(appointment.EXTRA_SERVICE_ID,3);
         i.putExtra(appointment.EXTRA_LATITUDE, latitude);
         i.putExtra(appointment.EXTRA_LONGITUDE, longitude);
         startActivity(i);

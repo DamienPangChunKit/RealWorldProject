@@ -91,7 +91,7 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
 
         //Testing working normal or totally crashed
         //currently no crashed
-        Toast.makeText(staffLocation.this, destLatitude + " + " + destLongtitude, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(staffLocation.this, destLatitude + " + " + destLongtitude, Toast.LENGTH_SHORT).show();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -170,6 +170,8 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
                 iconIgnorePlacement(true),
                 iconAllowOverlap(true),
                 iconOffset(new Float[] {0f, -9f})));
+
+
     }
 
 
