@@ -57,6 +57,11 @@ public class checkAppointment extends AppCompatActivity {
                 setResult(RESULT_OK, data);
                 finish();
             }
+            else if(resultCode == RESULT_CANCELED){
+                mAdapter.updateResultSet();
+                mAdapter.notifyDataSetChanged();
+
+            }
         }
     }
 
@@ -92,7 +97,7 @@ public class checkAppointment extends AppCompatActivity {
 
                 switch(method){
                     case FETCH_DATA:
-                        query = "SELECT id, appointment_datetime, status, service_type, destination_address, service_description, payment_amount FROM service_request WHERE customer_id = ?";
+                        query = "SELECT id, appointment_datetime, status, service_type, destination_address, service_description, payment_amount, destination_latitude, destination_longitude FROM service_request WHERE customer_id = ?";
                         stmt = conn.prepareStatement(query);
                         stmt.setString(1, String.valueOf(customer_id));
                         result = stmt.executeQuery();
@@ -171,14 +176,18 @@ public class checkAppointment extends AppCompatActivity {
 
                 final String serviceID = result.getString(1);
                 final String dateTime = result.getString(2);
+
                 String[] separate = dateTime.split(" ");
                 final String date = separate[0];
                 final String time = separate[1];
+
                 final String status = result.getString(3);
                 final String serviceType = result.getString(4);
                 final String address = result.getString(5);
                 final String description = result.getString(6);
                 final String price = result.getString(7);
+                final double latitude = result.getDouble(8);
+                final double longitude = result.getDouble(9);
 
                 checkAppointmentHolder.TVserviceID.setText(" " + serviceID);
                 checkAppointmentHolder.TVdate.setText(" " + date);
@@ -188,7 +197,7 @@ public class checkAppointment extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(checkAppointment.this, finalAppointmentInfo.class);
-                        i.putExtra("finalServiceID", serviceID);
+                        i.putExtra(finalAppointmentInfo.EXTRA_SERVICE_ID, serviceID);
                         i.putExtra("finalServices", serviceType);
                         i.putExtra("finalAddress", address);
                         i.putExtra("finalDate", date);
@@ -196,6 +205,8 @@ public class checkAppointment extends AppCompatActivity {
                         i.putExtra("finalDescription", description);
                         i.putExtra("finalPrice", price);
                         i.putExtra("finalStatus", status);
+                        i.putExtra(finalAppointmentInfo.EXTRA_LATITUDE,latitude);
+                        i.putExtra(finalAppointmentInfo.EXTRA_LONGITUDE,longitude);
                         i.putExtra(login.EXTRA_ID, customer_id);
                         i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
                         startActivityForResult(i, REQUEST_CODE6);

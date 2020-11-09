@@ -57,7 +57,7 @@ public class appointment extends AppCompatActivity {
 
     public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
     public static final String EXTRA_LONGITUDE = "com.example.damien.realworldproject.LONGITUDE";
-    public static final String EXTRA_SERVICE_ID = "com.example.damien.realworldproject.LONGITUDE";
+    public static final String EXTRA_SERVICE_ID = "com.example.damien.realworldproject.SERVICE_ID";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

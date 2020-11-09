@@ -52,12 +52,16 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
     //public static final always put on the top
     public static final int VIEW_STAFF_LOCATION = 37;
 
-    private int id;
+    private String id;
 
     //main variables
+    //testing
+    private String iStatus;
+
     private Double destLatitude;
-    private Double destLongtitude;
+    private Double destLongitude;
     private LatLng latLng;
+    //
 
     private MapView mapView;
     private MapboxMap map;
@@ -83,11 +87,12 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
 
         //pass to track staff location activity
         //testing the variables
-        id = i.getInt(appointment.EXTRA_SERVICE_ID);
-        destLatitude = i.getDouble(appointment.EXTRA_LATITUDE);
-        destLongtitude = i.getDouble(appointment.EXTRA_LONGITUDE);
 
-        latLng = new LatLng(destLatitude,destLongtitude);
+        id = i.getString(finalAppointmentInfo.EXTRA_SERVICE_ID);
+        destLatitude = i.getDouble(finalAppointmentInfo.EXTRA_LATITUDE);
+        destLongitude = i.getDouble(finalAppointmentInfo.EXTRA_LONGITUDE);
+
+        latLng = new LatLng(destLatitude,destLongitude);
 
         //Testing working normal or totally crashed
         //currently no crashed
@@ -251,7 +256,7 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
             try {
                 String query = "SELECT latitude, longitude FROM gps_tracking WHERE service_id=? ORDER BY id DESC LIMIT 1";
                 stmt = conn.prepareStatement(query);
-                stmt.setInt(1, id);
+                stmt.setString(1, id);
                 ResultSet result = stmt.executeQuery();
                 if (result.next()) {
                     latLng1 = new LatLng(result.getDouble(1), result.getDouble(2));
@@ -261,9 +266,12 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
             catch (Exception e) {
                 Log.e("ERROR MySQL Statement", e.getMessage());
             }
+
             closeConn();
             return latLng1;
         }
+
+
         private Connection connectDB() {
             try {
                 Class.forName(LIBRARY);
