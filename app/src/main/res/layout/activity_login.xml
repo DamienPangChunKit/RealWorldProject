@@ -87,7 +87,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:onClick="btnSignIn_onClicked"
+        android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -95,6 +95,7 @@
         android:layout_marginBottom="160dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:onClick="btnSignIn_onClicked"
         android:src="@drawable/arrow"
         app:fabCustomSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -108,17 +109,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="172dp"
-        android:layout_marginEnd="14dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="8dp"
         android:text="Sign in"
         android:textColor="@android:color/white"
         android:textSize="20dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.733"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
+        app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -127,32 +127,14 @@
         android:layout_centerInParent="true"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:onClick="btnSignUp_onClicked"
         android:padding="15dp"
         android:text="Sign Up"
-        android:onClick="btnSignUp_onClicked"
         android:textColor="#C1DFE5"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.113"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:padding="15dp"
-        android:text="Forget Password"
-        android:textColor="#C1DFE5"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.842"
         app:layout_constraintStart_toStartOf="parent" />
 
 

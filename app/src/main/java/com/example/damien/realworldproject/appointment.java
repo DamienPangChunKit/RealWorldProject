@@ -42,6 +42,12 @@ public class appointment extends AppCompatActivity {
     private float totalAmt;
     private double latitude, longitude;
     private double totalPayment;
+    private String service1;
+    private String service2;
+    private String service3;
+    private Float price1;
+    private Float price2;
+    private Float price3;
 
     private TextInputLayout layoutDateTime;
     private TextInputLayout layoutServiceType;
@@ -54,10 +60,6 @@ public class appointment extends AppCompatActivity {
     private String dateTimeOrder;
 
     private boolean[] checkedServiceType;
-
-    public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
-    public static final String EXTRA_LONGITUDE = "com.example.damien.realworldproject.LONGITUDE";
-    public static final String EXTRA_SERVICE_ID = "com.example.damien.realworldproject.LONGITUDE";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,12 @@ public class appointment extends AppCompatActivity {
         totalAmt = getIntent().getFloatExtra(login.EXTRA_WALLET_BALANCE, -1);
         latitude = getIntent().getDoubleExtra(map.EXTRA_LATITUDE, 0);
         longitude = getIntent().getDoubleExtra(map.EXTRA_LONGITUDE, 0);
+        service1 = getIntent().getStringExtra(login.EXTRA_SERVICE1);
+        service2 = getIntent().getStringExtra(login.EXTRA_SERVICE2);
+        service3 = getIntent().getStringExtra(login.EXTRA_SERVICE3);
+        price1 = getIntent().getFloatExtra(login.EXTRA_PRICE1, -1);
+        price2 = getIntent().getFloatExtra(login.EXTRA_PRICE2, -1);
+        price3 = getIntent().getFloatExtra(login.EXTRA_PRICE3, -1);
 
         unitFloor = findViewById(R.id.eTUnitFloor);
         buildingName = findViewById(R.id.eTBuildingName);
@@ -95,19 +103,34 @@ public class appointment extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(appointment.this);
-                final String[] serviceTypeArr = new String[]{"Service Type 1", "Service Type 2"};
+                final String[] serviceTypeArr = new String[]{service1, service2, service3};
                 checkedServiceType = new boolean[]{
                         false, // service type 1
-                        false // service type 2
+                        false, // service type 2
+                        false  // service type 3
                 };
-                if (serviceType.getText().toString().equals("Service Type 1")) {
+
+                if (serviceType.getText().toString().equals(service1)) {
                     checkedServiceType[0] = true;
-                } else if (serviceType.getText().toString().equals("Service Type 2")) {
+                } else if (serviceType.getText().toString().equals(service2)) {
                     checkedServiceType[1] = true;
-                } else if (serviceType.getText().toString().equals("Service Type 1 and 2")) {
+                } else if (serviceType.getText().toString().equals(service3)) {
+                    checkedServiceType[2] = true;
+                } else if (serviceType.getText().toString().equals(service1 + ", " + service2)) {
                     checkedServiceType[0] = true;
                     checkedServiceType[1] = true;
+                } else if (serviceType.getText().toString().equals(service2 + ", " + service3)) {
+                    checkedServiceType[1] = true;
+                    checkedServiceType[2] = true;
+                } else if (serviceType.getText().toString().equals(service1 + ", " + service3)) {
+                    checkedServiceType[0] = true;
+                    checkedServiceType[2] = true;
+                } else if (serviceType.getText().toString().equals(service1 + ", " + service2 + ", " + service3)) {
+                    checkedServiceType[0] = true;
+                    checkedServiceType[1] = true;
+                    checkedServiceType[2] = true;
                 }
+
                 builder.setTitle("Service Type");
                 builder.setIcon(R.drawable.service_type_icon);
                 builder.setMultiChoiceItems(serviceTypeArr, checkedServiceType, new DialogInterface.OnMultiChoiceClickListener() {
@@ -116,23 +139,59 @@ public class appointment extends AppCompatActivity {
                     }
                 });
                 builder.setPositiveButton("Select", new DialogInterface.OnClickListener() {
+                    Float servicePrice123 = price1 + price2 + price3;
+                    Float servicePrice12 = price1 + price2;
+                    Float servicePrice23 = price2 + price3;
+                    Float servicePrice13 = price1 + price3;
+                    Float servicePrice1 = price1;
+                    Float servicePrice2 = price2;
+                    Float servicePrice3 = price3;
+
+                    String displayService123 = service1 + ", " + service2 + ", " + service3;
+                    String displayService12 = service1 + ", " + service2;
+                    String displayService23 = service2 + ", " + service3;
+                    String displayService13 = service1 + ", " + service3;
+                    String displayService1 = service1;
+                    String displayService2 = service2;
+                    String displayService3 = service3;
+
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (checkedServiceType[0] && checkedServiceType[1]) {
-                            serviceType.setText("Service Type 1 and 2");
-                            mTVTotalPayment.setText("RM 123.00");
-                            totalPayment = 123.00;
-                            serviceOrder = "service 1, service 2";
+                        if (checkedServiceType[0] && checkedServiceType[1] && checkedServiceType[2]) {
+                            serviceType.setText(displayService123);
+                            mTVTotalPayment.setText("RM " + servicePrice123 + "0");
+                            totalPayment = servicePrice123;
+                            serviceOrder = displayService123;
+                        } else if (checkedServiceType[0] && checkedServiceType[2]) {
+                            serviceType.setText(displayService13);
+                            mTVTotalPayment.setText("RM " + servicePrice13 + "0");
+                            totalPayment = servicePrice13;
+                            serviceOrder = displayService13;
+                        } else if (checkedServiceType[1] && checkedServiceType[2]) {
+                            serviceType.setText(displayService23);
+                            mTVTotalPayment.setText("RM " + servicePrice23 + "0");
+                            totalPayment = servicePrice23;
+                            serviceOrder = displayService23;
+                        } else if (checkedServiceType[0] && checkedServiceType[1]) {
+                            serviceType.setText(displayService12);
+                            mTVTotalPayment.setText("RM " + servicePrice12 + "0");
+                            totalPayment = servicePrice12;
+                            serviceOrder = displayService12;
+                        } else if (checkedServiceType[2]) {
+                            serviceType.setText(displayService3);
+                            mTVTotalPayment.setText("RM " + servicePrice3 + "0");
+                            totalPayment = servicePrice3;
+                            serviceOrder = displayService3;
                         } else if (checkedServiceType[1]) {
-                            serviceType.setText("Service Type 2");
-                            mTVTotalPayment.setText("RM 73.00");
-                            totalPayment = 73.00;
-                            serviceOrder = "service 2";
+                            serviceType.setText(displayService2);
+                            mTVTotalPayment.setText("RM " + servicePrice2 + "0");
+                            totalPayment = servicePrice2;
+                            serviceOrder = displayService2;
                         } else if (checkedServiceType[0]) {
-                            serviceType.setText("Service Type 1");
-                            mTVTotalPayment.setText("RM 50.00");
-                            totalPayment = 50.00;
-                            serviceOrder = "service 1";
+                            serviceType.setText(displayService1);
+                            mTVTotalPayment.setText("RM " + servicePrice1 + "0");
+                            totalPayment = servicePrice1;
+                            serviceOrder = displayService1;
                         } else {
                             serviceType.setText("");
                             mTVTotalPayment.setText("RM 0.00");
@@ -277,6 +336,14 @@ public class appointment extends AppCompatActivity {
 
     // Havent add location msg or maybe no need add
     private void openConfirmationDialog() {
+        Float servicePrice1 = price1;
+        Float servicePrice2 = price2;
+        Float servicePrice3 = price3;
+
+        String displayService123 = service1 + ", " + service2 + ", " + service3;
+        String displayService12 = service1 + ", " + service2;
+        String displayService23 = service2 + ", " + service3;
+        String displayService13 = service1 + ", " + service3;
 
         DecimalFormat format = new DecimalFormat("##.00");
         String formattedTotal = format.format(totalPayment);
@@ -292,22 +359,36 @@ public class appointment extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(appointment.this);
         builder.setTitle("Are you sure want to made Appointment ?");
-        if (serviceType.getText().
-
-                toString().
-
-                equals("Service Type 1 and 2"))
-
-        {
-            builder.setMessage("Service Type 1    - RM   50.00 " + "\n"
-                    + "Service Type 2    - RM   73.00 " + "\n\n"
+        if (serviceType.getText().toString().equals(displayService123)) {
+            builder.setMessage("Service Type 1    - RM   " + servicePrice1 + "0" + "\n"
+                    + "Service Type 2    - RM   " + servicePrice2 + "0" + "\n"
+                    + "Service Type 3    - RM   " + servicePrice3 + "0" + "\n\n"
                     + "Total Payment    - RM " + formattedTotal + "\n"
                     + msgDateTime + "\n"
                     + "Address     : " + address + "\n"
                     + "Description: " + descriptionInput);
-        } else
-
-        {
+        } else if (serviceType.getText().toString().equals(displayService12)){
+            builder.setMessage("Service Type 1    - RM   " + servicePrice1 + "0" + "\n"
+                    + "Service Type 2    - RM   " + servicePrice2 + "0" + "\n\n"
+                    + "Total Payment    - RM " + formattedTotal + "\n"
+                    + msgDateTime + "\n"
+                    + "Address     : " + address + "\n"
+                    + "Description: " + descriptionInput);
+        } else if (serviceType.getText().toString().equals(displayService23)){
+            builder.setMessage("Service Type 2    - RM   " + servicePrice2 + "0" + "\n"
+                    + "Service Type 3    - RM   " + servicePrice3 + "0" + "\n\n"
+                    + "Total Payment    - RM " + formattedTotal + "\n"
+                    + msgDateTime + "\n"
+                    + "Address     : " + address + "\n"
+                    + "Description: " + descriptionInput);
+        } else if (serviceType.getText().toString().equals(displayService13)){
+            builder.setMessage("Service Type 1    - RM   " + servicePrice1 + "0" + "\n"
+                    + "Service Type 3    - RM   " + servicePrice3 + "0" + "\n\n"
+                    + "Total Payment    - RM " + formattedTotal + "\n"
+                    + msgDateTime + "\n"
+                    + "Address     : " + address + "\n"
+                    + "Description: " + descriptionInput);
+        } else {
             builder.setMessage(serviceType.getText().toString() + "    - RM   " + formattedTotal + "\n\n"
                     + "Total Payment    - RM   " + formattedTotal + "\n"
                     + msgDateTime + "\n"
@@ -339,116 +420,108 @@ public class appointment extends AppCompatActivity {
         dialog.show();
     }
 
-        public void btnGetLocation_onClicked(View view) {
-            Intent i = new Intent(appointment.this, map.class);
-            startActivityForResult(i, 5);
+    public void btnGetLocation_onClicked(View view) {
+        Intent i = new Intent(appointment.this, map.class);
+        startActivityForResult(i, 5);
+    }
+
+    public class Background extends AsyncTask<String, Void, ResultSet> {
+        private static final String LIBRARY = "com.mysql.jdbc.Driver";
+        private static final String USERNAME = "sql12372307";
+        private static final String DB_NAME = "sql12372307";
+        private static final String PASSWORD = "LYyljvuyn8";
+        private static final String SERVER = "sql12.freemysqlhosting.net";
+
+        private Connection conn;
+        private PreparedStatement stmt, stmt2;
+        private ProgressDialog progressDialog;
+
+        public Background() {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+        @Override
+        protected void onPostExecute(ResultSet result) {
+            super.onPostExecute(result);
+
+            try {
+                Intent i = new Intent();
+                i.putExtra("TOTAL_AMOUNT", totalAmt);
+                setResult(RESULT_OK, i);
+                finish();
+            }
+            catch (Exception e) {
+                Log.e("ERROR BACKGROUND", e.getMessage());
+                Toast.makeText(appointment.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+            finally {
+                try { result.close(); } catch (Exception e) { /* ignored */ }
+                closeConn();
+            }
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(appointment.this);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setMessage("Processing data");
+            progressDialog.show();
         }
 
-        public class Background extends AsyncTask<String, Void, ResultSet> {
-            private static final String LIBRARY = "com.mysql.jdbc.Driver";
-            private static final String USERNAME = "sql12372307";
-            private static final String DB_NAME = "sql12372307";
-            private static final String PASSWORD = "LYyljvuyn8";
-            private static final String SERVER = "sql12.freemysqlhosting.net";
+        @Override
+        protected ResultSet doInBackground(String... strings) {
+            conn = connectDB();
+            ResultSet result = null;
 
-            private Connection conn;
-            private PreparedStatement stmt, stmt2;
-            private ProgressDialog progressDialog;
+            Calendar calendar = Calendar.getInstance();
+            Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
 
-            public Background() {
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
+            if (conn == null) {
+                return null;
             }
-            @Override
-            protected void onPostExecute(ResultSet result) {
-                super.onPostExecute(result);
+            try {
+                String query = "insert into service_request (customer_id, service_type, destination_latitude, destination_longitude, appointment_datetime, destination_address, payment_amount, status, request_datetime, service_description) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                stmt = conn.prepareStatement(query);
+                stmt.setInt(1, Integer.parseInt(strings[0]));
+                stmt.setString(2, strings[1]);
+                stmt.setDouble(3, Double.parseDouble(strings[2]));
+                stmt.setDouble(4, Double.parseDouble(strings[3]));
+                stmt.setString(5, strings[4]);
+                stmt.setString(6, strings[5]);
+                stmt.setFloat(7, Float.parseFloat(strings[6]));
+                stmt.setString(8, "pending assign staff");
+                stmt.setTimestamp(9, timestamp);
+                stmt.setString(10, strings[7]);
 
-                try {
-                    Intent i = new Intent();
-                    i.putExtra("TOTAL_AMOUNT", totalAmt);
-                    setResult(RESULT_OK, i);
-                    finish();
-                }
-                catch (Exception e) {
-                    Log.e("ERROR BACKGROUND", e.getMessage());
-                    Toast.makeText(appointment.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                }
-                finally {
-                    //progressDialog.hide();
-                    try { result.close(); } catch (Exception e) { /* ignored */ }
-                    closeConn();
-                }
+                stmt.executeUpdate();
             }
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                progressDialog = new ProgressDialog(appointment.this);
-                progressDialog.setCanceledOnTouchOutside(false);
-                progressDialog.setMessage("Processing data");
-                progressDialog.show();
-                // progressDialog.show();
+            catch (Exception e) {
+                Log.e("ERROR MySQL Statement", e.getMessage());
             }
+            return result;
+        }
 
-            @Override
-            protected ResultSet doInBackground(String... strings) {
-                conn = connectDB();
-                ResultSet result = null;
 
-                Calendar calendar = Calendar.getInstance();
-                Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
-
-                if (conn == null) {
-                    return null;
-                }
-                try {
-                    String query = "insert into service_request (customer_id, service_type, destination_latitude, destination_longitude, appointment_datetime, destination_address, payment_amount, status, request_datetime, service_description) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                    stmt = conn.prepareStatement(query);
-                    stmt.setInt(1, Integer.parseInt(strings[0]));
-                    stmt.setString(2, strings[1]);
-                    stmt.setDouble(3, Double.parseDouble(strings[2]));
-                    stmt.setDouble(4, Double.parseDouble(strings[3]));
-                    stmt.setString(5, strings[4]);
-                    stmt.setString(6, strings[5]);
-                    stmt.setFloat(7, Float.parseFloat(strings[6]));
-                    stmt.setString(8, "pending assign staff");
-                    stmt.setTimestamp(9, timestamp);
-                    stmt.setString(10, strings[7]);
-
-                    stmt.executeUpdate();
-                }
-                catch (Exception e) {
-                    Log.e("ERROR MySQL Statement", e.getMessage());
-                }
-                return result;
+        private Connection connectDB(){
+            try {
+                Class.forName(LIBRARY);
+                return DriverManager.getConnection("jdbc:mysql://" + SERVER + "/" + DB_NAME, USERNAME, PASSWORD);
+            } catch (Exception e) {
+                Log.e("Error on Connection", e.getMessage());
+                return null;
             }
+        }
 
-
-            private Connection connectDB(){
-                try {
-                    Class.forName(LIBRARY);
-                    return DriverManager.getConnection("jdbc:mysql://" + SERVER + "/" + DB_NAME, USERNAME, PASSWORD);
-                } catch (Exception e) {
-                    Log.e("Error on Connection", e.getMessage());
-                    return null;
-                }
+        public void closeConn() {
+            try {
+                stmt.close();
+                stmt2.close();
+            } catch (Exception e) {
+                /* ignored */
             }
-
-            public void closeConn() {
-                try {
-                    stmt.close();
-                    stmt2.close();
-                } catch (Exception e) {
-                    /* ignored */
-                }
-                try {
-                    conn.close();
-                } catch (Exception e) { /* ignored */ }
+            try {
+                conn.close();
+            } catch (Exception e) { /* ignored */ }
         }
     }
 }
-
-
-
-
-
-

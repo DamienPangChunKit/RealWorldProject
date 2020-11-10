@@ -16,10 +16,7 @@ import android.widget.Toast;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -48,21 +45,13 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
 
 public class staffLocation extends AppCompatActivity implements OnMapReadyCallback{
-
-    //public static final always put on the top
-    public static final int VIEW_STAFF_LOCATION = 37;
-
-    private int id;
-
-    //main variables
+    private String id;
     private Double destLatitude;
-    private Double destLongtitude;
+    private Double destLongitude;
     private LatLng latLng;
 
     private MapView mapView;
     private MapboxMap map;
-    private Marker destinationMarker;
-    private Marker staffLocationMarker;
     private TrafficPlugin trafficPlugin;
     private Timer timer;
 
@@ -81,23 +70,16 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
 
         Bundle i = getIntent().getExtras();
 
-        //pass to track staff location activity
-        //testing the variables
-        id = i.getInt(appointment.EXTRA_SERVICE_ID);
-        destLatitude = i.getDouble(appointment.EXTRA_LATITUDE);
-        destLongtitude = i.getDouble(appointment.EXTRA_LONGITUDE);
+        id = i.getString(finalAppointmentInfo.EXTRA_SERVICE_ID);
+        destLatitude = i.getDouble(finalAppointmentInfo.EXTRA_LATITUDE);
+        destLongitude = i.getDouble(finalAppointmentInfo.EXTRA_LONGITUDE);
 
-        latLng = new LatLng(destLatitude,destLongtitude);
-
-        //Testing working normal or totally crashed
-        //currently no crashed
-        Toast.makeText(staffLocation.this, destLatitude + " + " + destLongtitude, Toast.LENGTH_SHORT).show();
+        latLng = new LatLng(destLatitude,destLongitude);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         }
-        //end of testing here
 
         mapView = findViewById(R.id.staffMap);
         mapView.onCreate(savedInstanceState);
@@ -134,12 +116,6 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
                         .zoom(16)
                         .target(latLng)
                         .build();
-//                IconFactory iconFactory = IconFactory.getInstance(staffLocation.this);
-//                Icon icon = iconFactory.fromResource(R.drawable.blue_marker);
-//                destinationMarker = map.addMarker(new MarkerOptions()
-//                        .icon(icon)
-//                        .position(latLng)
-//                        .setTitle("Your Destination"));
                 initSource(style);
                 initLayers(style);
                 map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 4000);
@@ -154,12 +130,8 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
         GeoJsonSource geoJsonSource = new GeoJsonSource(DESTINATION_SOURCE_ID, feature);
         loadedMapStyle.addSource(geoJsonSource);
 
-//        Add the LineLayer to the map. This layer will display the directions route.
     }
 
-    /**
-     * Add the route and marker icon layers to the map
-     */
     private void initLayers(@NonNull Style loadedMapStyle) {
 
         loadedMapStyle.addImage(RED_PIN_ICON_ID, BitmapUtils.getBitmapFromDrawable(
@@ -171,7 +143,6 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
                 iconAllowOverlap(true),
                 iconOffset(new Float[] {0f, -9f})));
     }
-
 
     public class Background extends AsyncTask<Void, Void, LatLng> {
         private static final String LIBRARY = "com.mysql.jdbc.Driver";
@@ -203,13 +174,6 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
                 Toast.makeText(staffLocation.this, "Staff haven't start his/her journey", Toast.LENGTH_SHORT).show();
             }
             else {
-//                IconFactory iconFactory = IconFactory.getInstance(ViewMap.this);
-//                Icon icon = iconFactory.fromResource(R.drawable.red_marker);
-//                MarkerOptions markerOptions = new MarkerOptions()
-//                        .position(latLng1)
-//                        .setTitle("Staff Current Location")
-//                        .icon(icon);
-//                staffLocationMarker = map.addMarker(markerOptions);
 
                 GeoJsonSource geoJsonSource = style.getSourceAs(STAFF_SOURCE_ID);
                 if (geoJsonSource == null) {
@@ -249,7 +213,7 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
             try {
                 String query = "SELECT latitude, longitude FROM gps_tracking WHERE service_id=? ORDER BY id DESC LIMIT 1";
                 stmt = conn.prepareStatement(query);
-                stmt.setInt(1, id);
+                stmt.setString(1, id);
                 ResultSet result = stmt.executeQuery();
                 if (result.next()) {
                     latLng1 = new LatLng(result.getDouble(1), result.getDouble(2));
@@ -259,9 +223,12 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
             catch (Exception e) {
                 Log.e("ERROR MySQL Statement", e.getMessage());
             }
+
             closeConn();
             return latLng1;
         }
+
+
         private Connection connectDB() {
             try {
                 Class.forName(LIBRARY);

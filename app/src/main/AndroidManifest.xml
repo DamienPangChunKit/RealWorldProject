@@ -27,7 +27,6 @@
         <activity android:name=".appointment" />
         <activity android:name=".reload" />
         <activity android:name=".profile" />
-        <activity android:name=".history" />
         <activity android:name=".map" />
         <activity android:name=".editProfile" />
         <activity android:name=".changePassword" />

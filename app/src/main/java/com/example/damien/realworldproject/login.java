@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class login extends AppCompatActivity {
     private TextInputLayout textInputUsername;
@@ -27,6 +28,16 @@ public class login extends AppCompatActivity {
     public static final String EXTRA_WALLET_BALANCE = "com.example.damien.realworldproject.WALLET";
     public static final String EXTRA_PHONE = "com.example.damien.realworldproject.PHONE";
     public static final String EXTRA_PASSWORD = "com.example.damien.realworldproject.PASSWORD";
+    public static final String EXTRA_SERVICE1 = "com.example.damien.realworldproject.SERVICE1";
+    public static final String EXTRA_SERVICE2 = "com.example.damien.realworldproject.SERVICE2";
+    public static final String EXTRA_SERVICE3 = "com.example.damien.realworldproject.SERVICE3";
+    public static final String EXTRA_PRICE1 = "com.example.damien.realworldproject.PRICE1";
+    public static final String EXTRA_PRICE2 = "com.example.damien.realworldproject.PRICE2";
+    public static final String EXTRA_PRICE3 = "com.example.damien.realworldproject.PRICE3";
+
+
+    private String[] serviceType;
+    private Float[] price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +46,7 @@ public class login extends AppCompatActivity {
 
         textInputUsername = findViewById(R.id.textInputUsername);
         textInputPassword = findViewById(R.id.textInputPassword);
+
     }
 
     @Override
@@ -114,7 +126,7 @@ public class login extends AppCompatActivity {
         private static final String SERVER = "sql12.freemysqlhosting.net";
 
         private Connection conn;
-        private PreparedStatement stmt;
+        private PreparedStatement stmt, stmt2;
         private ProgressDialog progressDialog;
 
         public Background() {
@@ -128,13 +140,44 @@ public class login extends AppCompatActivity {
             Intent i = new Intent(login.this, customer.class);
             String passwordInput = textInputPassword.getEditText().getText().toString().trim();
 
+
+
             try {
+                String query2 = "SELECT service, price FROM service_type";
+                stmt2 = conn.prepareStatement(query2);
+
+                ResultSet resultSet = stmt2.executeQuery();
+                ArrayList<String> serviceTypeTemp = new ArrayList<>();
+                ArrayList<Float> priceTemp = new ArrayList<>();
+
+                while (resultSet.next()){
+                    serviceTypeTemp.add(resultSet.getString(1));
+                    priceTemp.add(resultSet.getFloat(2));
+                }
+
+                serviceType = new String[serviceTypeTemp.size()];
+                price = new Float[priceTemp.size()];
+
+                for(int j = 0; j < serviceType.length; j++){
+                    serviceType[j] = serviceTypeTemp.get(j);
+                    price[j] = priceTemp.get(j);
+                }
+
+                stmt2.close();
+                resultSet.close();
+
                 if (result.next()) {
                     i.putExtra(EXTRA_ID, result.getInt(1));
                     i.putExtra(EXTRA_USERNAME, result.getString(2));
                     i.putExtra(EXTRA_WALLET_BALANCE, result.getFloat(3));
                     i.putExtra(EXTRA_PHONE, result.getString(4));
                     i.putExtra(EXTRA_PASSWORD, passwordInput);
+                    i.putExtra(EXTRA_SERVICE1, serviceType[0]);
+                    i.putExtra(EXTRA_SERVICE2, serviceType[1]);
+                    i.putExtra(EXTRA_SERVICE3, serviceType[2]);
+                    i.putExtra(EXTRA_PRICE1, price[0]);
+                    i.putExtra(EXTRA_PRICE2, price[1]);
+                    i.putExtra(EXTRA_PRICE3, price[2]);
                     startActivity(i);
                 }
                 else {
