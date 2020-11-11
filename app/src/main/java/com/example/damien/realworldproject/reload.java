@@ -22,65 +22,31 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class reload extends AppCompatActivity {
-    private TextInputLayout layoutCardNumber;
     private TextInputLayout layoutAmount;
     private TextInputLayout layoutPassword;
-    private EditText mETCardNum;
+    private TextInputLayout layoutConfirmPassword;
 
     private int id;
     private float totalAmt;
     private String password;
-
+    TextView TVtitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reload);
-
-        layoutCardNumber = findViewById(R.id.textInputCardNumber);
+        TVtitle = findViewById(R.id.tvReloadTitle);
         layoutAmount = findViewById(R.id.textInputAmount);
         layoutPassword = findViewById(R.id.textInputPass);
-
-        mETCardNum = findViewById(R.id.eTCardNumber);
+        layoutConfirmPassword = findViewById(R.id.textInputConfirmPass);
 
         password = getIntent().getStringExtra(login.EXTRA_PASSWORD);
         id = getIntent().getIntExtra(login.EXTRA_ID, -1);
         totalAmt = getIntent().getFloatExtra(login.EXTRA_WALLET_BALANCE, -1);
-
-        mETCardNum.addTextChangedListener(new TextWatcher() {
-            int count = 0;
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int inputlength = mETCardNum.getText().toString().length();
-
-                if (count <= inputlength && inputlength == 4 || inputlength == 9 || inputlength == 14){
-                    mETCardNum.setText(mETCardNum.getText().toString() + " ");
-
-                    int temp = mETCardNum.getText().length();
-                    mETCardNum.setSelection(temp);
-
-                } else if (count >= inputlength && (inputlength == 4 || inputlength == 9 || inputlength == 14)) {
-                    mETCardNum.setText(mETCardNum.getText().toString().substring(0, mETCardNum.getText().toString().length() - 1));
-
-                    int temp = mETCardNum.getText().length();
-                    mETCardNum.setSelection(temp);
-                }
-                count = mETCardNum.getText().toString().length();
-            }
-        });
+        TVtitle.setText(password);
     }
 
     public void btnReload_onClicked(View view) {
-        if (!validateCardNumber() | !validateAmount() | !validatePassword()){
+        if (!validateAmount() | !validatePassword() | !validateConfirmPassword()){
             return;
         } else {
             openConfirmationReload();
@@ -88,14 +54,12 @@ public class reload extends AppCompatActivity {
     }
 
     private void openConfirmationReload() {
-        String cardNum = layoutCardNumber.getEditText().getText().toString();
         String a = layoutAmount.getEditText().getText().toString();
         final int amount = Integer.parseInt(a);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(reload.this);
         builder.setTitle("Are you sure want to reload \nRM " + amount + " ?");
-        builder.setMessage("Card Number  : " + cardNum + "\n"
-                + "Amount            : RM " + amount + ".00");
+        builder.setMessage("Amount : RM " + amount + ".00");
 
         builder.setPositiveButton("Reload", new DialogInterface.OnClickListener() {
             @Override
@@ -120,37 +84,24 @@ public class reload extends AppCompatActivity {
         dialog.show();
     }
 
-    private boolean validateCardNumber() {
-        String cardNum = layoutCardNumber.getEditText().getText().toString();
-
-        if (cardNum.isEmpty()){
-            layoutCardNumber.setError("This field cannot be empty!");
-            return false;
-        } else if (cardNum.length() != 19){
-            layoutCardNumber.setError("Please enter only 16 digit number!");
-            return false;
-        } else {
-            layoutCardNumber.setError(null);
-            return true;
-        }
-    }
-
     private boolean validateAmount(){
         String amt = layoutAmount.getEditText().getText().toString();
-        int amountTOP = Integer.parseInt(amt);
 
         if (amt.isEmpty()){
             layoutAmount.setError("This field cannot be empty!");
             return false;
-        } else if (amountTOP < 10) {
-            layoutAmount.setError("Please reload at least RM 10!");
-            return false;
-        } else if (amountTOP > 1000) {
-            layoutAmount.setError("Only can reload a maximum RM 1000!");
-            return false;
         } else {
-            layoutAmount.setError(null);
-            return true;
+            int amountTOP = Integer.parseInt(amt);
+            if (amountTOP < 10) {
+                layoutAmount.setError("Please reload at least RM 10!");
+                return false;
+            } else if (amountTOP > 1000) {
+                layoutAmount.setError("Only can reload a maximum RM 1000!");
+                return false;
+            } else {
+                layoutAmount.setError(null);
+                return true;
+            }
         }
     }
 
@@ -165,6 +116,22 @@ public class reload extends AppCompatActivity {
             return false;
         } else {
             layoutPassword.setError(null);
+            return true;
+        }
+    }
+
+    private boolean validateConfirmPassword() {
+        String passwordInput = layoutPassword.getEditText().getText().toString();
+        String confirmPasswordInput = layoutConfirmPassword.getEditText().getText().toString();
+
+        if (confirmPasswordInput.isEmpty()) {
+            layoutConfirmPassword.setError("This field cannot be empty!");
+            return false;
+        } else if (!confirmPasswordInput.equals(passwordInput)) {
+            layoutConfirmPassword.setError("Password does not match!");
+            return false;
+        } else {
+            layoutConfirmPassword.setError(null);
             return true;
         }
     }

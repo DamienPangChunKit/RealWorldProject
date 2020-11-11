@@ -38,7 +38,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:background="#357878"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="42dp"
                 android:layout_marginEnd="42dp"
-                android:hint="Building Name"
+                android:hint="Building / Street  / Park"
                 android:inputType="text"
                 android:padding="15dp"
                 android:textColor="#D5D8D8"
@@ -140,7 +140,7 @@
             android:id="@+id/textInputDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="140dp"
+            android:paddingBottom="155dp"
             android:textColor="#D5D8D8"
             android:textColorHint="#D5D8D8">
 
@@ -186,7 +186,9 @@
                 android:text="Confirm"
                 android:textStyle="bold" />
         </RelativeLayout>
+
     </LinearLayout>
+
     <Button
         android:id="@+id/getLocation"
         android:layout_width="fill_parent"
@@ -194,7 +196,7 @@
         android:layout_gravity="bottom"
         android:layout_marginEnd="42dp"
         android:layout_marginStart="42dp"
-        android:layout_marginTop="450dp"
+        android:layout_marginTop="440dp"
         android:background="@color/colorPrimary"
         android:text="Get my location"
         android:textColor="@android:color/white"

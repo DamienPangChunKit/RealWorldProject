@@ -340,10 +340,6 @@ public class appointment extends AppCompatActivity {
 
     // Havent add location msg or maybe no need add
     private void openConfirmationDialog() {
-        Float servicePrice1 = price1;
-        Float servicePrice2 = price2;
-        Float servicePrice3 = price3;
-
         String displayService123 = service1 + ", " + service2 + ", " + service3;
         String displayService12 = service1 + ", " + service2;
         String displayService23 = service2 + ", " + service3;
@@ -356,7 +352,6 @@ public class appointment extends AppCompatActivity {
         String descriptionInput = layoutDescription.getEditText().getText().toString();
 
         if (descriptionInput.isEmpty())
-
         {
             descriptionInput = "No description";
         }
@@ -364,37 +359,27 @@ public class appointment extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(appointment.this);
         builder.setTitle("Are you sure want to made Appointment ?");
         if (serviceType.getText().toString().equals(displayService123)) {
-            builder.setMessage("Service Type 1    - RM   " + servicePrice1 + "0" + "\n"
-                    + "Service Type 2    - RM   " + servicePrice2 + "0" + "\n"
-                    + "Service Type 3    - RM   " + servicePrice3 + "0" + "\n\n"
-                    + "Total Payment    - RM " + formattedTotal + "\n"
+            builder.setMessage("Total Payment    - RM " + formattedTotal + "\n"
                     + msgDateTime + "\n"
                     + "Address     : " + address + "\n"
                     + "Description: " + descriptionInput);
         } else if (serviceType.getText().toString().equals(displayService12)){
-            builder.setMessage("Service Type 1    - RM   " + servicePrice1 + "0" + "\n"
-                    + "Service Type 2    - RM   " + servicePrice2 + "0" + "\n\n"
-                    + "Total Payment    - RM " + formattedTotal + "\n"
+            builder.setMessage("Total Payment    - RM " + formattedTotal + "\n"
                     + msgDateTime + "\n"
                     + "Address     : " + address + "\n"
                     + "Description: " + descriptionInput);
         } else if (serviceType.getText().toString().equals(displayService23)){
-            builder.setMessage("Service Type 2    - RM   " + servicePrice2 + "0" + "\n"
-                    + "Service Type 3    - RM   " + servicePrice3 + "0" + "\n\n"
-                    + "Total Payment    - RM " + formattedTotal + "\n"
+            builder.setMessage("Total Payment    - RM " + formattedTotal + "\n"
                     + msgDateTime + "\n"
                     + "Address     : " + address + "\n"
                     + "Description: " + descriptionInput);
         } else if (serviceType.getText().toString().equals(displayService13)){
-            builder.setMessage("Service Type 1    - RM   " + servicePrice1 + "0" + "\n"
-                    + "Service Type 3    - RM   " + servicePrice3 + "0" + "\n\n"
-                    + "Total Payment    - RM " + formattedTotal + "\n"
+            builder.setMessage("Total Payment    - RM " + formattedTotal + "\n"
                     + msgDateTime + "\n"
                     + "Address     : " + address + "\n"
                     + "Description: " + descriptionInput);
         } else {
-            builder.setMessage(serviceType.getText().toString() + "    - RM   " + formattedTotal + "\n\n"
-                    + "Total Payment    - RM   " + formattedTotal + "\n"
+            builder.setMessage("Total Payment    - RM   " + formattedTotal + "\n"
                     + msgDateTime + "\n"
                     + "Address     : " + address + "\n"
                     + "Description: " + descriptionInput);

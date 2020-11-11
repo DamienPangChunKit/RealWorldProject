@@ -43,9 +43,6 @@ public class editProfile extends AppCompatActivity {
         if (usernameInput.isEmpty()){
             mLayoutUsername.setError("This field cannot be empty!");
             return false;
-        } else if (usernameInput.length() > 15) {
-            mLayoutUsername.setError("Username was too long!");
-            return false;
         } else {
             mLayoutUsername.setError(null);
             return true;

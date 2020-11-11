@@ -71,15 +71,7 @@ public class finalAppointmentInfo extends AppCompatActivity {
     public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
     public static final String EXTRA_LONGITUDE = "com.example.damien.realworldproject.LONGITUDE";
 
-    public static final String PENDING = "pending assign staff";
-    public static final String ONGOING = "pending service";
-    public static final String SERVICING = "servicing";
-    public static final String COMPLETED = "completed";
-
-    public static final String EXTRA_SERVICE_ID = "com.example.damien.realworldproject.SERVICE_ID";
     public static final String EXTRA_STATUS = "com.example.damien.realworldproject.STATUS";
-    public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
-    public static final String EXTRA_LONGITUDE = "com.example.damien.realworldproject.LONGITUDE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
