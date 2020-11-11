@@ -13,27 +13,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".login">
+        <activity android:name=".login" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".register" />
+        <activity android:name=".register" android:screenOrientation="portrait"/>
         <activity
             android:name=".customer"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".appointment" />
-        <activity android:name=".reload" />
-        <activity android:name=".profile" />
-        <activity android:name=".map" />
-        <activity android:name=".editProfile" />
-        <activity android:name=".changePassword" />
-        <activity android:name=".staffLocation" />
-        <activity android:name=".checkAppointment" />
-        <activity android:name=".finalAppointmentInfo" />
-        <activity android:name=".paymentReview"></activity>
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait"/>
+        <activity android:name=".appointment" android:screenOrientation="portrait"/>
+        <activity android:name=".reload" android:screenOrientation="portrait"/>
+        <activity android:name=".profile" android:screenOrientation="portrait"/>
+        <activity android:name=".map" android:screenOrientation="portrait"/>
+        <activity android:name=".editProfile" android:screenOrientation="portrait"/>
+        <activity android:name=".changePassword" android:screenOrientation="portrait"/>
+        <activity android:name=".staffLocation" android:screenOrientation="portrait"/>
+        <activity android:name=".checkAppointment" android:screenOrientation="portrait"/>
+        <activity android:name=".finalAppointmentInfo" android:screenOrientation="portrait"/>
+        <activity android:name=".paymentReview" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

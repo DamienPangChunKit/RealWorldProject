@@ -57,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#D5D8D8"
+            android:layout_marginStart="42dp"
             android:textColorHint="#D5D8D8">
 
             <android.support.design.widget.TextInputEditText
@@ -64,7 +65,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="42dp"
-                android:layout_marginStart="42dp"
                 android:hint="Service Type"
                 android:inputType="text"
                 android:padding="15dp"

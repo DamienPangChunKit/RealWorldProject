@@ -63,9 +63,6 @@ public class login extends AppCompatActivity {
         if (usernameInput.isEmpty()){
             textInputUsername.setError("This field cannot be empty!");
             return false;
-        } else if (usernameInput.length() > 15) {
-            textInputUsername.setError("Username was too long!");
-            return false;
         } else {
             textInputUsername.setError(null);
             return true;
