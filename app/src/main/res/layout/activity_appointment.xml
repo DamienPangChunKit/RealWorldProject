@@ -98,6 +98,7 @@
             android:id="@+id/textInputUnitFloor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="42dp"
             android:textColor="#D5D8D8"
             android:textColorHint="#D5D8D8">
 
@@ -106,7 +107,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="42dp"
-                android:layout_marginStart="42dp"
                 android:hint="Unit / Floor"
                 android:inputType="text"
                 android:padding="15dp"
@@ -120,13 +120,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#D5D8D8"
+            android:layout_marginStart="42dp"
             android:textColorHint="#D5D8D8">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/eTBuildingName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="42dp"
                 android:layout_marginEnd="42dp"
                 android:hint="Building / Street  / Park"
                 android:inputType="text"
@@ -142,13 +142,13 @@
             android:layout_height="wrap_content"
             android:paddingBottom="155dp"
             android:textColor="#D5D8D8"
+            android:layout_marginStart="42dp"
             android:textColorHint="#D5D8D8">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/eTDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="42dp"
                 android:layout_marginEnd="42dp"
                 android:hint="Description"
                 android:lines="10"
