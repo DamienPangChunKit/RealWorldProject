@@ -20,6 +20,17 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.w3c.dom.Text;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+
 public class finalAppointmentInfo extends AppCompatActivity {
 
     TextView finalTVServiceID;
@@ -60,6 +71,16 @@ public class finalAppointmentInfo extends AppCompatActivity {
     public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
     public static final String EXTRA_LONGITUDE = "com.example.damien.realworldproject.LONGITUDE";
 
+    public static final String PENDING = "pending assign staff";
+    public static final String ONGOING = "pending service";
+    public static final String SERVICING = "servicing";
+    public static final String COMPLETED = "completed";
+
+    public static final String EXTRA_SERVICE_ID = "com.example.damien.realworldproject.SERVICE_ID";
+    public static final String EXTRA_STATUS = "com.example.damien.realworldproject.STATUS";
+    public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
+    public static final String EXTRA_LONGITUDE = "com.example.damien.realworldproject.LONGITUDE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +109,7 @@ public class finalAppointmentInfo extends AppCompatActivity {
         finalStatus = i.getStringExtra("finalStatus");
         finalLatitude = i.getDoubleExtra(EXTRA_LATITUDE,7);
         finalLongitude = i.getDoubleExtra(EXTRA_LONGITUDE,8);
+
 
         if (finalDescription == null) {
             finalDescription = "-";

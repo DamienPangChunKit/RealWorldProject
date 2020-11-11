@@ -176,9 +176,11 @@ public class checkAppointment extends AppCompatActivity {
 
                 final String serviceID = result.getString(1);
                 final String dateTime = result.getString(2);
+
                 String[] separate = dateTime.split(" ");
                 final String date = separate[0];
                 final String time = separate[1];
+
                 final String status = result.getString(3);
                 final String serviceType = result.getString(4);
                 final String address = result.getString(5);
@@ -203,6 +205,8 @@ public class checkAppointment extends AppCompatActivity {
                         i.putExtra("finalDescription", description);
                         i.putExtra("finalPrice", price);
                         i.putExtra("finalStatus", status);
+                        i.putExtra(finalAppointmentInfo.EXTRA_LATITUDE,latitude);
+                        i.putExtra(finalAppointmentInfo.EXTRA_LONGITUDE,longitude);
                         i.putExtra(login.EXTRA_ID, customer_id);
                         i.putExtra(login.EXTRA_WALLET_BALANCE, totalAmt);
                         i.putExtra(finalAppointmentInfo.EXTRA_LATITUDE,latitude);

@@ -46,9 +46,18 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
 public class staffLocation extends AppCompatActivity implements OnMapReadyCallback{
     private String id;
+
+    //public static final always put on the top
+    public static final int VIEW_STAFF_LOCATION = 37;
+
+    //main variables
+    //testing
+    private String iStatus;
+
     private Double destLatitude;
     private Double destLongitude;
     private LatLng latLng;
+    //
 
     private MapView mapView;
     private MapboxMap map;
@@ -142,6 +151,8 @@ public class staffLocation extends AppCompatActivity implements OnMapReadyCallba
                 iconIgnorePlacement(true),
                 iconAllowOverlap(true),
                 iconOffset(new Float[] {0f, -9f})));
+
+
     }
 
     public class Background extends AsyncTask<Void, Void, LatLng> {
