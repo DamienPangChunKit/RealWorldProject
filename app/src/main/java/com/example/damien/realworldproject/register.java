@@ -22,9 +22,9 @@ import java.sql.ResultSet;
 public class register extends AppCompatActivity {
     private static final Pattern PASSWORD_PATTERN =
             Pattern.compile("^" +
-                    "(?=.*[0-9])" +      // at least 1 number
-                    "(?=.*[a-zA-Z])" +   // any letter
-                    "(.{8,})" +        // at least 6, at most 20 character
+                    "(?=.*[0-9])" +
+                    "(?=.*[a-zA-Z])" +
+                    "(.{8,})" +
                     "$");
 
     private TextInputLayout textInputUsername;

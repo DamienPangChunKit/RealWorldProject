@@ -24,29 +24,26 @@ import java.sql.ResultSet;
 public class reload extends AppCompatActivity {
     private TextInputLayout layoutAmount;
     private TextInputLayout layoutPassword;
-    private TextInputLayout layoutConfirmPassword;
 
     private int id;
     private float totalAmt;
     private String password;
-    TextView TVtitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reload);
-        TVtitle = findViewById(R.id.tvReloadTitle);
+
         layoutAmount = findViewById(R.id.textInputAmount);
         layoutPassword = findViewById(R.id.textInputPass);
-        layoutConfirmPassword = findViewById(R.id.textInputConfirmPass);
 
         password = getIntent().getStringExtra(login.EXTRA_PASSWORD);
         id = getIntent().getIntExtra(login.EXTRA_ID, -1);
         totalAmt = getIntent().getFloatExtra(login.EXTRA_WALLET_BALANCE, -1);
-        TVtitle.setText(password);
     }
 
     public void btnReload_onClicked(View view) {
-        if (!validateAmount() | !validatePassword() | !validateConfirmPassword()){
+        if (!validateAmount() | !validatePassword()){
             return;
         } else {
             openConfirmationReload();
@@ -116,22 +113,6 @@ public class reload extends AppCompatActivity {
             return false;
         } else {
             layoutPassword.setError(null);
-            return true;
-        }
-    }
-
-    private boolean validateConfirmPassword() {
-        String passwordInput = layoutPassword.getEditText().getText().toString();
-        String confirmPasswordInput = layoutConfirmPassword.getEditText().getText().toString();
-
-        if (confirmPasswordInput.isEmpty()) {
-            layoutConfirmPassword.setError("This field cannot be empty!");
-            return false;
-        } else if (!confirmPasswordInput.equals(passwordInput)) {
-            layoutConfirmPassword.setError("Password does not match!");
-            return false;
-        } else {
-            layoutConfirmPassword.setError(null);
             return true;
         }
     }

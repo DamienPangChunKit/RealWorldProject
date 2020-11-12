@@ -16,15 +16,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.regex.Pattern;
-public class changePassword extends AppCompatActivity {  ////// I try to set text and see value of id but it straight crashed and run back to login page
-    private static final Pattern PASSWORD_PATTERN =     /////// So mostly is id problem causes it cannot update password
+public class changePassword extends AppCompatActivity {
+    private static final Pattern PASSWORD_PATTERN =
             Pattern.compile("^" +
-                    "(?=.*[0-9])" +      // at least 1 number
-                    "(?=.*[a-zA-Z])" +   // any letter
-                    "(.{8,})" +        // at least 6, at most 20 character
+                    "(?=.*[0-9])" +
+                    "(?=.*[a-zA-Z])" +
+                    "(.{8,})" +
                     "$");
+
     private TextInputLayout mLayoutOldPassword;
     private TextInputLayout mLayoutNewPassword;
+    private TextInputLayout layoutConfirmPassword;
     private int id;
     private String oldPassword;
     @Override
@@ -33,6 +35,7 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
         setContentView(R.layout.activity_change_password);
         mLayoutOldPassword = findViewById(R.id.layout_oldPassword);
         mLayoutNewPassword = findViewById(R.id.layout_newPassword);
+        layoutConfirmPassword = findViewById(R.id.textInputConfirmPass);
         id = getIntent().getIntExtra(login.EXTRA_ID, -1);
         oldPassword = getIntent().getStringExtra(login.EXTRA_PASSWORD);
     }
@@ -73,8 +76,25 @@ public class changePassword extends AppCompatActivity {  ////// I try to set tex
             return true;
         }
     }
+
+    private boolean validateConfirmPassword() {
+        String newInput = mLayoutNewPassword.getEditText().getText().toString();
+        String confirmPasswordInput = layoutConfirmPassword.getEditText().getText().toString();
+
+        if (confirmPasswordInput.isEmpty()) {
+            layoutConfirmPassword.setError("This field cannot be empty!");
+            return false;
+        } else if (!confirmPasswordInput.equals(newInput)) {
+            layoutConfirmPassword.setError("Password does not match!");
+            return false;
+        } else {
+            layoutConfirmPassword.setError(null);
+            return true;
+        }
+    }
+
     public void btnSavePassword_onClick(View view) {
-        if (!validateOldPassword() | !validateNewPassword()){
+        if (!validateOldPassword() | !validateNewPassword() |!validateConfirmPassword()){
             return;
         } else {
             String newInput = mLayoutNewPassword.getEditText().getText().toString();
