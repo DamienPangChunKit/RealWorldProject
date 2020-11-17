@@ -31,6 +31,7 @@ public class editProfile extends AppCompatActivity {
         mETphone = findViewById(R.id.ETphone);
         mLayoutUsername = findViewById(R.id.layout_username);
         mLayoutPhone = findViewById(R.id.layout_phone_no);
+
         Intent i = getIntent();
         id = i.getIntExtra(login.EXTRA_ID, -1);
         username = i.getStringExtra(profile.USERNAME);

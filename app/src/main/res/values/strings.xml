@@ -3,8 +3,8 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="access_token">sk.eyJ1IjoiaG9saWFuZyIsImEiOiJja2dqamYyNTUwODQyMnptbnRienFtM3d5In0.63x-pgUb6rAbIgcoaG3zDA</string>
-    <string name="name_and_phone_exists">Username and Phone number existed, please try other</string>
-    <string name="phone_exists">Phone number existed, please try other</string>
-    <string name="name_exists">Username existed, please try other</string>
+    <string name="name_and_phone_exists">Username and Phone number existed, please try other!</string>
+    <string name="phone_exists">Phone number existed, please try other!</string>
+    <string name="name_exists">Username existed, please try other!</string>
     <string name="username">User</string>
 </resources>

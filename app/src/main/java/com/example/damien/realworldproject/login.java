@@ -178,7 +178,7 @@ public class login extends AppCompatActivity {
                     startActivity(i);
                 }
                 else {
-                    Toast.makeText(login.this, "Username and Password Invalid", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(login.this, "Username or Password Invalid", Toast.LENGTH_SHORT).show();
                 }
             }
             catch (Exception e) {

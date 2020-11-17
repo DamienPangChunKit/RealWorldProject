@@ -75,8 +75,8 @@
             android:id="@+id/ETphone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword"
+            android:hint="Phone number"
+            android:inputType="phone"
             android:padding="15dp"
             android:textColor="#D5D8D8"
             android:textColorHint="#D5D8D8" />

@@ -138,7 +138,7 @@ public class register extends AppCompatActivity {
         return sb.toString();
     }
 
-    public class Background extends AsyncTask<String, Void, ResultSet> {
+    public class Background extends AsyncTask<String, Void, String> {
         private static final String LIBRARY = "com.mysql.jdbc.Driver";
         private static final String USERNAME = "sql12372307";
         private static final String DB_NAME = "sql12372307";
@@ -146,7 +146,7 @@ public class register extends AppCompatActivity {
         private static final String SERVER = "sql12.freemysqlhosting.net";
 
         private Connection conn;
-        private PreparedStatement stmt;
+        private PreparedStatement stmt, stmt2;
         private ProgressDialog progressDialog;
 
         public Background() {
@@ -155,23 +155,31 @@ public class register extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ResultSet result) {
+        protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            progressDialog.hide();
+
             try {
-                startActivity(new Intent(register.this, login.class));
+                if (result.isEmpty()){
+                    startActivity(new Intent(register.this, login.class));
+                } else {
+                    if (result.equals(getString(R.string.name_and_phone_exists))){
+                        textInputUsername.setError(getString(R.string.name_exists));
+                        textInputPhone.setError(getString(R.string.phone_exists));
+
+                    } else if (result.equals(getString(R.string.phone_exists))){
+                        textInputPhone.setError(getString(R.string.phone_exists));
+
+                    } else if (result.equals(getString(R.string.name_exists))){
+                        textInputUsername.setError(getString(R.string.name_exists));
+                    }
+                }
             }
             catch (Exception e) {
                 Log.e("ERROR BACKGROUND", e.getMessage());
                 Toast.makeText(register.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
-            finally {
-                progressDialog.hide();
-                try { result.close(); } catch (Exception e) { /* ignored */ }
-                closeConn();
-            }
-
         }
-
 
         @Override
         protected void onPreExecute() {
@@ -183,26 +191,52 @@ public class register extends AppCompatActivity {
         }
 
         @Override
-        protected ResultSet doInBackground(String... strings) {
+        protected String doInBackground(String... strings) {
             conn = connectDB();
-            ResultSet result = null;
             if (conn == null) {
                 return null;
             }
             try {
-                String query = "insert into account (username, password, phone_no, role, wallet_balance) values (?, ?, ?, ?, ?)";
-                stmt = conn.prepareStatement(query);
-                stmt.setString(1, strings[0]);
-                stmt.setString(2, strings[1]);
-                stmt.setString(3, strings[2]);
-                stmt.setString(4, "customer");
-                stmt.setFloat(5, 0.0f);
-                stmt.executeUpdate();
+                String username = strings[0];
+                String password = strings[1];
+                String phone_no = strings[2];
+
+                String query2 = "SELECT username, phone_no FROM account WHERE (username LIKE ? OR phone_no = ?) ";
+                stmt2 = conn.prepareStatement(query2);
+                stmt2.setString(1, username);
+                stmt2.setString(2, phone_no);
+                ResultSet resultSet = stmt2.executeQuery();
+
+                if (resultSet.next()) {
+                    String userName = resultSet.getString(1);
+                    String phNo = resultSet.getString(2);
+
+                    if (resultSet.next() || userName.toLowerCase().equals(username.toLowerCase()) && phNo.equals(phone_no)) {
+                        return getString(R.string.name_and_phone_exists);
+                    }
+
+                    if (phNo.equals(phone_no)) {
+                        return getString(R.string.phone_exists);
+                    }
+
+                    return getString(R.string.name_exists);
+
+
+                } else {
+                    String query = "insert into account (username, password, phone_no, role, wallet_balance) values (?, ?, ?, ?, ?)";
+                    stmt = conn.prepareStatement(query);
+                    stmt.setString(1, username);
+                    stmt.setString(2, password);
+                    stmt.setString(3, phone_no);
+                    stmt.setString(4, "customer");
+                    stmt.setFloat(5, 0.0f);
+                    stmt.executeUpdate();
+                }
             }
             catch (Exception e) {
                 Log.e("ERROR MySQL Statement", e.getMessage());
             }
-            return result;
+            return "";
         }
 
         private Connection connectDB() {

@@ -28,7 +28,12 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+
+import static com.example.damien.realworldproject.appointment.Background.INSERT_DATA;
 
 public class appointment extends AppCompatActivity {
     EditText date_time;
@@ -41,13 +46,6 @@ public class appointment extends AppCompatActivity {
     private int id;
     private float totalAmt;
     private double latitude, longitude;
-    private double totalPayment;
-    private String service1;
-    private String service2;
-    private String service3;
-    private Float price1;
-    private Float price2;
-    private Float price3;
 
     private TextInputLayout layoutDateTime;
     private TextInputLayout layoutServiceType;
@@ -56,10 +54,15 @@ public class appointment extends AppCompatActivity {
     private TextInputLayout layoutDescription;
     private TextInputLayout layoutLatLng;
     private TextView mTVTotalPayment;
-    private String serviceOrder;
-    private String dateTimeOrder;
 
+    private int[] serviceIds;
+    private String[] serviceString;
+    private Float[] servicePrice;
     private boolean[] checkedServiceType;
+    private String dateTimeOrder;
+    private String finalService;
+    private Float finalPrice;
+    private List<Integer> list;
 
     public static final String EXTRA_LATITUDE = "com.example.damien.realworldproject.LATITUDE";
     public static final String EXTRA_LONGITUDE = "com.example.damien.realworldproject.LONGITUDE";
@@ -69,6 +72,7 @@ public class appointment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
 
+        mTVTotalPayment = findViewById(R.id.tvTotalPayment);
         layoutDateTime = findViewById(R.id.textInputDateTime);
         layoutServiceType = findViewById(R.id.textInputServiceType);
         layoutUnitFloor = findViewById(R.id.textInputUnitFloor);
@@ -80,139 +84,83 @@ public class appointment extends AppCompatActivity {
         totalAmt = getIntent().getFloatExtra(login.EXTRA_WALLET_BALANCE, -1);
         latitude = getIntent().getDoubleExtra(map.EXTRA_LATITUDE, 0);
         longitude = getIntent().getDoubleExtra(map.EXTRA_LONGITUDE, 0);
-        service1 = getIntent().getStringExtra(login.EXTRA_SERVICE1);
-        service2 = getIntent().getStringExtra(login.EXTRA_SERVICE2);
-        service3 = getIntent().getStringExtra(login.EXTRA_SERVICE3);
-        price1 = getIntent().getFloatExtra(login.EXTRA_PRICE1, -1);
-        price2 = getIntent().getFloatExtra(login.EXTRA_PRICE2, -1);
-        price3 = getIntent().getFloatExtra(login.EXTRA_PRICE3, -1);
+        list = new ArrayList<>();
 
         unitFloor = findViewById(R.id.eTUnitFloor);
         buildingName = findViewById(R.id.eTBuildingName);
         TVLatLng = findViewById(R.id.tvLatLng);
         TVLatLng.setText("Latitude  : " + latitude + "\n"
                 + "Longitude: " + longitude);
-
+        new Background(Background.FETCH_SERVICE).execute();
         date_time = findViewById(R.id.eTDateTime);
         date_time.setInputType(InputType.TYPE_NULL);
-        date_time.setOnClickListener(new View.OnClickListener() {
+        date_time.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onFocusChange(View v, boolean hasFocus) {
+                date_time.clearFocus();
+                if (!hasFocus){
+                    return;
+                }
                 showDateTimeDialog(date_time);
             }
         });
         serviceType = findViewById(R.id.eTServiceType);
         serviceType.setInputType(InputType.TYPE_NULL);
-        serviceType.setOnClickListener(new View.OnClickListener() {
+        serviceType.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(appointment.this);
-                final String[] serviceTypeArr = new String[]{service1, service2, service3};
-                checkedServiceType = new boolean[]{
-                        false, // service type 1
-                        false, // service type 2
-                        false  // service type 3
-                };
-
-                if (serviceType.getText().toString().equals(service1)) {
-                    checkedServiceType[0] = true;
-                } else if (serviceType.getText().toString().equals(service2)) {
-                    checkedServiceType[1] = true;
-                } else if (serviceType.getText().toString().equals(service3)) {
-                    checkedServiceType[2] = true;
-                } else if (serviceType.getText().toString().equals(service1 + ", " + service2)) {
-                    checkedServiceType[0] = true;
-                    checkedServiceType[1] = true;
-                } else if (serviceType.getText().toString().equals(service2 + ", " + service3)) {
-                    checkedServiceType[1] = true;
-                    checkedServiceType[2] = true;
-                } else if (serviceType.getText().toString().equals(service1 + ", " + service3)) {
-                    checkedServiceType[0] = true;
-                    checkedServiceType[2] = true;
-                } else if (serviceType.getText().toString().equals(service1 + ", " + service2 + ", " + service3)) {
-                    checkedServiceType[0] = true;
-                    checkedServiceType[1] = true;
-                    checkedServiceType[2] = true;
+            public void onFocusChange(View v, boolean hasFocus) {
+                serviceType.clearFocus();
+                if (!hasFocus){
+                    return;
                 }
-
+                boolean[] temp = checkedServiceType.clone();
+                List<Integer> tempList = new ArrayList<>(list);
+                AlertDialog.Builder builder = new AlertDialog.Builder(appointment.this);
                 builder.setTitle("Service Type");
                 builder.setIcon(R.drawable.service_type_icon);
-                builder.setMultiChoiceItems(serviceTypeArr, checkedServiceType, new DialogInterface.OnMultiChoiceClickListener() {
+
+                builder.setMultiChoiceItems(serviceString, checkedServiceType, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (isChecked) {
+                            list.add(which);
+                        }
+                        else {
+                            list.remove(new Integer(which));
+                        }
                     }
                 });
                 builder.setPositiveButton("Select", new DialogInterface.OnClickListener() {
-                    Float servicePrice123 = price1 + price2 + price3;
-                    Float servicePrice12 = price1 + price2;
-                    Float servicePrice23 = price2 + price3;
-                    Float servicePrice13 = price1 + price3;
-                    Float servicePrice1 = price1;
-                    Float servicePrice2 = price2;
-                    Float servicePrice3 = price3;
-
-                    String displayService123 = service1 + ", " + service2 + ", " + service3;
-                    String displayService12 = service1 + ", " + service2;
-                    String displayService23 = service2 + ", " + service3;
-                    String displayService13 = service1 + ", " + service3;
-                    String displayService1 = service1;
-                    String displayService2 = service2;
-                    String displayService3 = service3;
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (checkedServiceType[0] && checkedServiceType[1] && checkedServiceType[2]) {
-                            serviceType.setText(displayService123);
-                            mTVTotalPayment.setText("RM " + servicePrice123 + "0");
-                            totalPayment = servicePrice123;
-                            serviceOrder = displayService123;
-                        } else if (checkedServiceType[0] && checkedServiceType[2]) {
-                            serviceType.setText(displayService13);
-                            mTVTotalPayment.setText("RM " + servicePrice13 + "0");
-                            totalPayment = servicePrice13;
-                            serviceOrder = displayService13;
-                        } else if (checkedServiceType[1] && checkedServiceType[2]) {
-                            serviceType.setText(displayService23);
-                            mTVTotalPayment.setText("RM " + servicePrice23 + "0");
-                            totalPayment = servicePrice23;
-                            serviceOrder = displayService23;
-                        } else if (checkedServiceType[0] && checkedServiceType[1]) {
-                            serviceType.setText(displayService12);
-                            mTVTotalPayment.setText("RM " + servicePrice12 + "0");
-                            totalPayment = servicePrice12;
-                            serviceOrder = displayService12;
-                        } else if (checkedServiceType[2]) {
-                            serviceType.setText(displayService3);
-                            mTVTotalPayment.setText("RM " + servicePrice3 + "0");
-                            totalPayment = servicePrice3;
-                            serviceOrder = displayService3;
-                        } else if (checkedServiceType[1]) {
-                            serviceType.setText(displayService2);
-                            mTVTotalPayment.setText("RM " + servicePrice2 + "0");
-                            totalPayment = servicePrice2;
-                            serviceOrder = displayService2;
-                        } else if (checkedServiceType[0]) {
-                            serviceType.setText(displayService1);
-                            mTVTotalPayment.setText("RM " + servicePrice1 + "0");
-                            totalPayment = servicePrice1;
-                            serviceOrder = displayService1;
-                        } else {
-                            serviceType.setText("");
-                            mTVTotalPayment.setText("RM 0.00");
-                            totalPayment = 0.00;
+                        Collections.sort(list);
+                        finalService = "";
+                        finalPrice = 0f;
+                        for (int i = 0; i < list.size(); i++) {
+                            if (i != 0) {
+                                finalService += ", ";
+                            }
+                            finalService += serviceString[list.get(i)];
+                            finalPrice += servicePrice[list.get(i)];
                         }
+                        serviceType.setText(finalService);
+                        mTVTotalPayment.setText("RM " + finalPrice + "0");
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < checkedServiceType.length; i++) {
+                            checkedServiceType[i] = temp[i];
+                        }
+                        list = new ArrayList<>(tempList);
+                        dialog.dismiss();
                     }
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
         });
-        mTVTotalPayment = findViewById(R.id.tvTotalPayment);
     }
 
     @Override
@@ -313,9 +261,9 @@ public class appointment extends AppCompatActivity {
                             String time = simpleTimeFormat.format(calendar.getTime());
                             date_time.setText("Date: " + date + "   Time: " + time);
                             dateTimeOrder = date + " " + time;
-                            date_time.setError(null);
+                            layoutDateTime.setError(null);
                         } else {
-                            date_time.setError("Only 3 hours after the current time can be selected!");
+                            layoutDateTime.setError("Only 3 hours after current time can be select!");
                             date_time.setText("");
                         }
                     }
@@ -326,10 +274,6 @@ public class appointment extends AppCompatActivity {
         new DatePickerDialog(appointment.this, dateSetListener, calendar.get(calendar.YEAR), calendar.get(calendar.MONTH), calendar.get(calendar.DAY_OF_MONTH)).show();
     }
 
-    public void hotspotTracker_onClicked(View view) {
-        // to be implement
-    }
-
     public void btnConfirm_onClicked(View view) {
         if (!validateServiceType() | !validateDateTime() | !validateUnitFloor() | !validateBuildingName() | !validateLatLng()) {
             return;
@@ -338,62 +282,32 @@ public class appointment extends AppCompatActivity {
         }
     }
 
-    // Havent add location msg or maybe no need add
     private void openConfirmationDialog() {
-        String displayService123 = service1 + ", " + service2 + ", " + service3;
-        String displayService12 = service1 + ", " + service2;
-        String displayService23 = service2 + ", " + service3;
-        String displayService13 = service1 + ", " + service3;
-
         DecimalFormat format = new DecimalFormat("##.00");
-        String formattedTotal = format.format(totalPayment);
+        String formattedTotal = format.format(finalPrice);
         String msgDateTime = date_time.getText().toString();
         String address = unitFloor.getText().toString() + ", " + buildingName.getText().toString();
         String descriptionInput = layoutDescription.getEditText().getText().toString();
 
-        if (descriptionInput.isEmpty())
-        {
+        if (descriptionInput.isEmpty()) {
             descriptionInput = "No description";
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(appointment.this);
         builder.setTitle("Are you sure want to made Appointment ?");
-        if (serviceType.getText().toString().equals(displayService123)) {
-            builder.setMessage("Total Payment    - RM " + formattedTotal + "\n"
-                    + msgDateTime + "\n"
-                    + "Address     : " + address + "\n"
-                    + "Description: " + descriptionInput);
-        } else if (serviceType.getText().toString().equals(displayService12)){
-            builder.setMessage("Total Payment    - RM " + formattedTotal + "\n"
-                    + msgDateTime + "\n"
-                    + "Address     : " + address + "\n"
-                    + "Description: " + descriptionInput);
-        } else if (serviceType.getText().toString().equals(displayService23)){
-            builder.setMessage("Total Payment    - RM " + formattedTotal + "\n"
-                    + msgDateTime + "\n"
-                    + "Address     : " + address + "\n"
-                    + "Description: " + descriptionInput);
-        } else if (serviceType.getText().toString().equals(displayService13)){
-            builder.setMessage("Total Payment    - RM " + formattedTotal + "\n"
-                    + msgDateTime + "\n"
-                    + "Address     : " + address + "\n"
-                    + "Description: " + descriptionInput);
-        } else {
-            builder.setMessage("Total Payment    - RM   " + formattedTotal + "\n"
-                    + msgDateTime + "\n"
-                    + "Address     : " + address + "\n"
-                    + "Description: " + descriptionInput);
-        }
+        builder.setMessage("Total Payment    - RM " + formattedTotal + "\n"
+                        + msgDateTime + "\n"
+                        + "Address     : " + address + "\n"
+                        + "Description: " + descriptionInput);
 
         String finalDescriptionInput = descriptionInput;
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener()
-
         {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Background bg = new Background();
-                bg.execute(String.valueOf(id), serviceOrder, String.valueOf(latitude), String.valueOf(longitude), dateTimeOrder, address, String.valueOf(totalPayment), String.valueOf(finalDescriptionInput));
+                Background bg = new Background(INSERT_DATA);
+                bg.execute(String.valueOf(id), finalService, String.valueOf(latitude), String.valueOf(longitude), dateTimeOrder, address, String.valueOf(finalPrice), String.valueOf(finalDescriptionInput));
             }
         });
 
@@ -421,29 +335,54 @@ public class appointment extends AppCompatActivity {
         private static final String PASSWORD = "LYyljvuyn8";
         private static final String SERVER = "sql12.freemysqlhosting.net";
 
+        public static final int FETCH_SERVICE = 30;
+        public static final int INSERT_DATA = 31;
+
+        private int method;
         private Connection conn;
-        private PreparedStatement stmt, stmt2;
+        private PreparedStatement stmt;
         private ProgressDialog progressDialog;
 
-        public Background() {
+        public Background(int method) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
+            this.method = method;
         }
         @Override
         protected void onPostExecute(ResultSet result) {
             super.onPostExecute(result);
 
             try {
-                Intent i = new Intent();
-                i.putExtra("TOTAL_AMOUNT", totalAmt);
-                setResult(RESULT_OK, i);
-                finish();
+                switch (this.method) {
+                    case FETCH_SERVICE:
+                        result.last();
+                        int totalRow = result.getRow();
+                        result.first();
+                        serviceIds = new int[totalRow];
+                        serviceString = new String[totalRow];
+                        servicePrice = new Float[totalRow];
+                        checkedServiceType = new boolean[totalRow];
+                        for (int i = 0; i < totalRow; i++) {
+                            serviceIds[i] = result.getInt(1);
+                            serviceString[i] = result.getString(2);
+                            servicePrice[i] = result.getFloat(3);
+                            checkedServiceType[i] = false;
+                            result.next();
+                        }
+                        break;
+                    case INSERT_DATA:
+                        Intent i = new Intent();
+                        i.putExtra("TOTAL_AMOUNT", totalAmt);
+                        setResult(RESULT_OK, i);
+                        finish();
+                }
             }
             catch (Exception e) {
                 Log.e("ERROR BACKGROUND", e.getMessage());
                 Toast.makeText(appointment.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
             finally {
+                progressDialog.hide();
                 try { result.close(); } catch (Exception e) { /* ignored */ }
                 closeConn();
             }
@@ -469,20 +408,28 @@ public class appointment extends AppCompatActivity {
                 return null;
             }
             try {
-                String query = "insert into service_request (customer_id, service_type, destination_latitude, destination_longitude, appointment_datetime, destination_address, payment_amount, status, request_datetime, service_description) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                stmt = conn.prepareStatement(query);
-                stmt.setInt(1, Integer.parseInt(strings[0]));
-                stmt.setString(2, strings[1]);
-                stmt.setDouble(3, Double.parseDouble(strings[2]));
-                stmt.setDouble(4, Double.parseDouble(strings[3]));
-                stmt.setString(5, strings[4]);
-                stmt.setString(6, strings[5]);
-                stmt.setFloat(7, Float.parseFloat(strings[6]));
-                stmt.setString(8, "pending assign staff");
-                stmt.setTimestamp(9, timestamp);
-                stmt.setString(10, strings[7]);
+                String query = "";
+                switch (this.method) {
+                    case FETCH_SERVICE:
+                        query = "SELECT id, service, price FROM service_type";
+                        stmt = conn.prepareStatement(query);
+                        return stmt.executeQuery();
+                    case INSERT_DATA:
+                        query = "insert into service_request (customer_id, service_type, destination_latitude, destination_longitude, appointment_datetime, destination_address, payment_amount, status, request_datetime, service_description) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        stmt = conn.prepareStatement(query);
+                        stmt.setInt(1, Integer.parseInt(strings[0]));
+                        stmt.setString(2, strings[1]);
+                        stmt.setDouble(3, Double.parseDouble(strings[2]));
+                        stmt.setDouble(4, Double.parseDouble(strings[3]));
+                        stmt.setString(5, strings[4]);
+                        stmt.setString(6, strings[5]);
+                        stmt.setFloat(7, Float.parseFloat(strings[6]));
+                        stmt.setString(8, "pending assign staff");
+                        stmt.setTimestamp(9, timestamp);
+                        stmt.setString(10, strings[7]);
 
-                stmt.executeUpdate();
+                        stmt.executeUpdate();
+                }
             }
             catch (Exception e) {
                 Log.e("ERROR MySQL Statement", e.getMessage());
@@ -504,7 +451,6 @@ public class appointment extends AppCompatActivity {
         public void closeConn() {
             try {
                 stmt.close();
-                stmt2.close();
             } catch (Exception e) {
                 /* ignored */
             }

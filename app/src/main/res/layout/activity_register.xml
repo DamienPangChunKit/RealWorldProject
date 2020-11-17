@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             app:errorEnabled="true"
             android:textColor="#D5D8D8"
+            android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:textColorHint="#D5D8D8">
 
@@ -49,8 +50,7 @@
                 android:textColor="#D5D8D8"
                 android:textColorHint="#D5D8D8"
                 android:inputType="text"
-                android:padding="15dp"
-                android:layout_marginEnd="40dp"/>
+                android:padding="15dp" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -59,6 +59,7 @@
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true"
             app:errorEnabled="true"
+            android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:textColor="#D5D8D8"
             android:textColorHint="#D5D8D8">
@@ -70,8 +71,7 @@
                 android:textColor="#D5D8D8"
                 android:textColorHint="#D5D8D8"
                 android:inputType="textPassword"
-                android:padding="15dp"
-                android:layout_marginEnd="40dp"/>
+                android:padding="15dp" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -80,6 +80,7 @@
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true"
             app:errorEnabled="true"
+            android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:textColor="#D5D8D8"
             android:textColorHint="#D5D8D8">
@@ -91,8 +92,7 @@
                 android:textColor="#D5D8D8"
                 android:textColorHint="#D5D8D8"
                 android:inputType="textPassword"
-                android:padding="15dp"
-                android:layout_marginEnd="40dp"/>
+                android:padding="15dp" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -102,6 +102,7 @@
             app:counterMaxLength="11"
             app:counterEnabled="true"
             app:errorEnabled="true"
+            android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:textColor="#D5D8D8"
             android:textColorHint="#D5D8D8">
@@ -113,8 +114,7 @@
                 android:textColor="#D5D8D8"
                 android:textColorHint="#D5D8D8"
                 android:inputType="phone"
-                android:padding="15dp"
-                android:layout_marginEnd="40dp"/>
+                android:padding="15dp" />
         </android.support.design.widget.TextInputLayout>
 
         <RelativeLayout

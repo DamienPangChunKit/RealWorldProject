@@ -142,7 +142,7 @@ public class changePassword extends AppCompatActivity {
                 if (result.isEmpty()) {
                     Intent i = new Intent();
                     i.putExtra("Password", newInput);
-                    setResult(RESULT_OK, i);
+                    setResult(RESULT_CANCELED, i);
                     finish();
                 }
                 else {

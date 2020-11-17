@@ -57,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#D5D8D8"
+            android:layout_marginEnd="42dp"
             android:layout_marginStart="42dp"
             android:textColorHint="#D5D8D8">
 
@@ -64,7 +65,6 @@
                 android:id="@+id/eTServiceType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="42dp"
                 android:hint="Service Type"
                 android:inputType="text"
                 android:padding="15dp"
@@ -78,6 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="42dp"
+            android:layout_marginEnd="42dp"
             android:textColor="#D5D8D8"
             android:textColorHint="#D5D8D8">
 
@@ -85,7 +86,6 @@
                 android:id="@+id/eTDateTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="42dp"
                 android:hint="Date and Time"
                 android:inputType="text"
                 android:padding="15dp"
@@ -99,6 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="42dp"
+            android:layout_marginEnd="42dp"
             android:textColor="#D5D8D8"
             android:textColorHint="#D5D8D8">
 
@@ -106,7 +107,6 @@
                 android:id="@+id/eTUnitFloor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="42dp"
                 android:hint="Unit / Floor"
                 android:inputType="text"
                 android:padding="15dp"
@@ -120,6 +120,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#D5D8D8"
+            android:layout_marginEnd="42dp"
             android:layout_marginStart="42dp"
             android:textColorHint="#D5D8D8">
 
@@ -127,7 +128,6 @@
                 android:id="@+id/eTBuildingName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="42dp"
                 android:hint="Building / Street  / Park"
                 android:inputType="text"
                 android:padding="15dp"
@@ -142,6 +142,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="155dp"
             android:textColor="#D5D8D8"
+            android:layout_marginEnd="42dp"
             android:layout_marginStart="42dp"
             android:textColorHint="#D5D8D8">
 
@@ -149,7 +150,6 @@
                 android:id="@+id/eTDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="42dp"
                 android:hint="Description"
                 android:lines="10"
                 android:minLines="5"
